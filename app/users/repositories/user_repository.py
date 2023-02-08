@@ -8,7 +8,7 @@ class UserRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, email, password):
+    def create_user(self, email, password):
         try:
             user = User(email, password)
             self.db.add(user)
@@ -18,11 +18,21 @@ class UserRepository:
         except IntegrityError as e:
             raise e
 
-    def get_by_id(self, user_id: str):
+    def create_superuser(self, email, password):
+        try:
+            user = User(email=email, password=password, superuser=True)
+            self.db.add(user)
+            self.db.commit()
+            self.db.refresh(user)
+            return user
+        except IntegrityError as e:
+            raise e
+
+    def read_by_id(self, user_id: str):
         user = self.db.query(User).filter(User.user_id == user_id).first()
         return user
 
-    def get_all(self):
+    def read_all(self):
         users = self.db.query(User).all()
         return users
 
@@ -45,3 +55,7 @@ class UserRepository:
             return user
         except Exception as e:
             raise e
+
+    def read_by_email(self, email: str):
+        user = self.db.query(User).filter(User.email == email).first()
+        return user
