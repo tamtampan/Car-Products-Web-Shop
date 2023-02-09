@@ -3,7 +3,7 @@ from app.users.controller import UserController
 from app.users.schemas import *
 from app.users.controller.user_authentication_controller import JWTBearer
 
-user_router = APIRouter(tags=["users"], prefix="/api/users")
+user_router = APIRouter(tags=["Users"], prefix="/api/users")
 
 # dependencies=[Depends(JWTBearer("super_user"))]
 
