@@ -61,7 +61,7 @@ from app.users.services import decodeJWT
 #         return is_token_valid
 
 class JWTBearer(HTTPBearer):
-    def __init__(self, role:str, auto_error: bool = True):
+    def __init__(self, role: str, auto_error: bool = True):
         super(JWTBearer, self).__init__(auto_error=auto_error)
         self.role = role
 
@@ -74,8 +74,10 @@ class JWTBearer(HTTPBearer):
             if not payload.get("valid"):
                 raise HTTPException(status_code=403, detail="Invalid token or expired token.")
             if payload.get("role") != self.role:
-                raise HTTPException(status_code=403, detail="User with provided role is not permitted to access this "
-                                                            "route.")
+                raise HTTPException(
+                    status_code=403,
+                    detail="User with provided role is not permitted to access this " "route.",
+                )
             return credentials.credentials
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")

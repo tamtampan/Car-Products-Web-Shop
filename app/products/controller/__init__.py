@@ -1,1 +1,3 @@
 from .product_category_controller import ProductCategoryController
+from .producer_controller import ProducerController
+from .product_controller import ProductController

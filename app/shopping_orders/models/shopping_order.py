@@ -10,7 +10,7 @@ class ShoppingOrder(Base):
     status = Column(Integer, default=0)  # status 0 oznacava da su proizvodi poruceni i da je proces u inicijalnoj fazi
     # (faza pakovanja), status 1 bi oznacavao da je posiljka poslata a na primer status 2 da je isporucena
     order_date = Column(Date, nullable=False)
-    shipped_date = Column(Date)
+    shipped_date = Column(Date, default=None)
 
     customer_id = Column(String(50), ForeignKey("customer.customer_id"), nullable=False)
     office_id = Column(String(50), ForeignKey("office.office_id"), nullable=False)

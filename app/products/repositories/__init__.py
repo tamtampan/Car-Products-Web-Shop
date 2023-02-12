@@ -1,1 +1,2 @@
 from .product_category_repository import ProductCategoryRepository
+from .producer_repository import ProducerRepository

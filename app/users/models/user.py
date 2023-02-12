@@ -7,7 +7,7 @@ class User(Base):
     __tablename__ = "user"
     user_id = Column(String(50), primary_key=True, default=uuid4)
     email = Column(String(100), unique=True, nullable=False)
-    password = Column(String(50))
+    password = Column(String(50), nullable=False)
     active = Column(Boolean, default=True)
     superuser = Column(Boolean, default=False)
 

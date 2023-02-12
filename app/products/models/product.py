@@ -1,5 +1,6 @@
 from uuid import uuid4
 from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.db import Base
 
@@ -15,7 +16,9 @@ class Product(Base):
     quantity_in_stock = Column(Integer)
 
     producer_id = Column(String(50), ForeignKey("producer.producer_id"), nullable=False)
+    producer = relationship("Producer", lazy='subquery')
     product_category_id = Column(String(50), ForeignKey("product_category.product_category_id"), nullable=False)
+    product_category = relationship("ProductCategory", lazy='subquery')
 
     def __init__(self, name, description, code, price, for_car_brand,
                  quantity_in_stock, producer_id, product_category_id):

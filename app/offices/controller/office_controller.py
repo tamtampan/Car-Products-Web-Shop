@@ -15,7 +15,7 @@ class OfficeController:
 
     @staticmethod
     def get_by_id(office_id: str):
-        office = OfficeService.get_by_id(office_id)
+        office = OfficeService.read_by_id(office_id)
         if office:
             return office
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -23,7 +23,7 @@ class OfficeController:
 
     @staticmethod
     def get_all():
-        office = OfficeService.get_all()
+        office = OfficeService.read_all()
         return office
 
     @staticmethod

@@ -1,17 +1,4 @@
-
-class EmployeeNotFoundException(Exception):
-    def __init__(self, message, code):
-        self.message = message
-        self.code = code
-
-
-class EmployeeTypeNotFoundException(Exception):
-    def __init__(self, message, code):
-        self.message = message
-        self.code = code
-
-
-class EmployeeTypeExistsException(Exception):
+class UserNotFoundException(Exception):
     def __init__(self, message, code):
         self.message = message
         self.code = code
@@ -24,6 +11,33 @@ class UserInvalidPassword(Exception):
 
 
 class UserNotSuperUser(Exception):
+    def __init__(self, message, code):
+        self.message = message
+        self.code = code
+
+
+class CustomerNotFoundException(Exception):
+    def __init__(self, message, code):
+        self.message = message
+        self.code = code
+
+
+class EmployeeNotFoundException(Exception):
+    def __init__(self, message, code):
+        self.message = message
+        self.code = code
+
+
+# -----------------------------------------------------------------------------------------
+
+
+# class EmployeeTypeNotFoundException(Exception):
+#     def __init__(self, message, code):
+#         self.message = message
+#         self.code = code
+
+
+class EmployeeTypeExistsException(Exception):
     def __init__(self, message, code):
         self.message = message
         self.code = code
