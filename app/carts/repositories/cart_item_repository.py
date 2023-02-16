@@ -1,6 +1,5 @@
 from sqlalchemy.orm import Session
 from app.carts.models import CartItem
-from app.carts.exceptions import CartItemNotFoundException
 
 
 class CartItemRepository:
@@ -19,20 +18,24 @@ class CartItemRepository:
             raise e
 
     def read_by_id(self, cart_item_id: str):
-        cart_item = self.db.query(CartItem).filter(CartItem.cart_item_id == cart_item_id).first()
-        if cart_item is None:
-            raise CartItemNotFoundException(f"Cart item with provided id: {cart_item_id} not found.", 400)
-        return cart_item
+        try:
+            cart_item = self.db.query(CartItem).filter(CartItem.cart_item_id == cart_item_id).first()
+            return cart_item
+        except Exception as e:
+            raise e
 
     def read_all(self):
-        cart_items = self.db.query(CartItem).all()
-        return cart_items
+        try:
+            cart_items = self.db.query(CartItem).all()
+            return cart_items
+        except Exception as e:
+            raise e
 
     def delete_by_id(self, cart_item_id: str):
         try:
             cart_item = self.db.query(CartItem).filter(CartItem.cart_item_id == cart_item_id).first()
             if cart_item is None:
-                raise CartItemNotFoundException(f"Cart item with provided id - {cart_item_id} not found.", 400)
+                return None
             self.db.delete(cart_item)
             self.db.commit()
             return True
@@ -43,7 +46,7 @@ class CartItemRepository:
         try:
             cart_item = self.db.query(CartItem).filter(CartItem.cart_item_id == cart_item_id).first()
             if cart_item is None:
-                raise CartItemNotFoundException(f"Cart item with provided id: {cart_item_id} not found.", 400)
+                return None
             cart_item.quantity = quantity
             self.db.add(cart_item)
             self.db.commit()

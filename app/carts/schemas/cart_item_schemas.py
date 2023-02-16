@@ -1,12 +1,12 @@
 from pydantic import BaseModel
-from pydantic import UUID4
+from pydantic.types import UUID4, PositiveInt
 from .shopping_cart_schemas import ShoppingCartSchema
 from app.products.schemas import ProductSchema
 
 
 class CartItemSchema(BaseModel):
     cart_item_id: UUID4
-    quantity: int
+    quantity: PositiveInt
     shopping_cart_id: str
     shopping_cart: ShoppingCartSchema
     product_id: str
@@ -17,7 +17,7 @@ class CartItemSchema(BaseModel):
 
 
 class CartItemSchemaIn(BaseModel):
-    quantity: int
+    quantity: PositiveInt
     shopping_cart_id: str
     product_id: str
 

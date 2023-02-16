@@ -1,5 +1,6 @@
 from app.products.services import ProducerService
 from fastapi import HTTPException, Response
+from sqlalchemy.exc import IntegrityError
 from app.products.exceptions import *
 
 
@@ -10,11 +11,13 @@ class ProducerController:
         try:
             producer = ProducerService.create(name, address, description)
             return producer
+        except IntegrityError:
+            raise HTTPException(status_code=400, detail=f"Producer with provided name - {name} already exists.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(producer_id: str):
+    def read_by_id(producer_id: str):
         try:
             producer = ProducerService.read_by_id(producer_id)
             return producer
@@ -24,7 +27,7 @@ class ProducerController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_name(name: str):
+    def read_by_name(name: str):
         try:
             producer = ProducerService.read_by_name(name)
             return producer
@@ -34,7 +37,7 @@ class ProducerController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             producers = ProducerService.read_all()
             return producers

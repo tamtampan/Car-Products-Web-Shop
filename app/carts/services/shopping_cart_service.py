@@ -2,6 +2,10 @@ from app.carts.repositories.shopping_cart_repository import ShoppingCartReposito
 from app.db.database import SessionLocal
 
 
+
+from sqlalchemy.exc import IntegrityError
+
+
 class ShoppingCartService:
 
     @staticmethod

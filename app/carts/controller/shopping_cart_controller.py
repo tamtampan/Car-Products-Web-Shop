@@ -22,7 +22,7 @@ class ShoppingCartController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(shopping_cart_id: str):
+    def read_by_id(shopping_cart_id: str):
         try:
             shopping_cart = ShoppingCartService.read_by_id(shopping_cart_id)
             return shopping_cart
@@ -32,7 +32,7 @@ class ShoppingCartController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             shopping_cart = ShoppingCartService.read_all()
             return shopping_cart

@@ -1,26 +1,31 @@
 from sqlalchemy.exc import IntegrityError
 from app.users.services import EmployeeService, UserService
+from app.offices.services import OfficeService
 from fastapi import HTTPException, Response
 from app.users.exceptions import EmployeeNotFoundException, UserNotFoundException
+from app.offices.exceptions import OfficeNotFoundException
 
 
 class EmployeeController:
 
     @staticmethod
-    def create(name: str, surname: str, phone: str, job_title: str, user_id: str):
+    def create(name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str):
         try:
             UserService.read_by_id(user_id)
-            employee = EmployeeService.create(name, surname, phone, job_title, user_id)
+            OfficeService.read_by_id(office_id)
+            employee = EmployeeService.create(name, surname, phone, job_title, user_id, office_id)
             return employee
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"User is already employee.")
         except UserNotFoundException:
             raise HTTPException(status_code=400, detail=f"You can not be employee if you are not user.")
+        except OfficeNotFoundException:
+            raise HTTPException(status_code=400, detail=f"No office with provided id found.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(employee_id: str):
+    def read_by_id(employee_id: str):
         try:
             employee = EmployeeService.read_by_id(employee_id)
             return employee
@@ -30,7 +35,7 @@ class EmployeeController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             employee = EmployeeService.read_all()
             return employee

@@ -1,13 +1,13 @@
 from datetime import date
 from pydantic import BaseModel
-from pydantic import UUID4
+from pydantic.types import UUID4, PositiveFloat
 from app.users.schemas import CustomerSchema
 from app.offices.schemas import OfficeSchema
 
 
 class ShoppingOrderSchema(BaseModel):
     shopping_order_id: UUID4
-    total_price: float
+    total_price: PositiveFloat
     status: int
     order_date: date
     shipped_date: date
@@ -22,7 +22,7 @@ class ShoppingOrderSchema(BaseModel):
 
 
 class ShoppingOrderSchemaIn(BaseModel):
-    total_price: float
+    total_price: PositiveFloat
     status: int
     order_date: date
     shipped_date: date

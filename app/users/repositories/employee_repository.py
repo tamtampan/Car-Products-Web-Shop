@@ -9,9 +9,9 @@ class EmployeeRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, name, surname, phone, job_title, user_id):
+    def create(self, name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str):
         try:
-            employee = Employee(name, surname, phone, job_title, user_id)
+            employee = Employee(name, surname, phone, job_title, user_id, office_id)
             self.db.add(employee)
             self.db.commit()
             self.db.refresh(employee)

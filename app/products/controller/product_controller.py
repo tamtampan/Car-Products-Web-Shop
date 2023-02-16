@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from app.products.services import ProductService, ProducerService, ProductCategoryService
 from fastapi import HTTPException, Response
 from app.products.exceptions import ProducerNotFoundException, ProductCategoryNotFoundException, \
-    ProductNotFoundException
+    ProductNotFoundException, ProductQuantityInStockSubtractionError
 
 
 class ProductController:
@@ -26,7 +26,7 @@ class ProductController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(product_id: str):
+    def read_by_id(product_id: str):
         try:
             product = ProductService.read_by_id(product_id)
             return product
@@ -36,7 +36,7 @@ class ProductController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             products = ProductService.read_all()
             return products
@@ -69,7 +69,29 @@ class ProductController:
         try:
             product = ProductService.update_quantity_in_stock(product_id, amount, subtract)
             return product
+        except ProductQuantityInStockSubtractionError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
         except ProductNotFoundException as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def read_products_for_car_brand(car_brand: str):
+        try:
+            products = ProductService.read_products_for_car_brand(car_brand)
+            return products
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def read_products_by_category_name(product_category_name: str):
+        try:
+            product_category = ProductCategoryService.read_category_name_like(product_category_name)
+            product_category_id = product_category.product_category_id
+            products = ProductService.read_products_by_category_id(product_category_id)
+            return products
+        except ProductCategoryNotFoundException as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

@@ -1,7 +1,7 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.products.models import Product
-from app.products.exceptions import ProductNotFoundException, ProductQuantityInStockError
+from app.products.exceptions import ProductNotFoundException, ProductQuantityInStockSubtractionError
 
 
 class ProductRepository:
@@ -75,7 +75,7 @@ class ProductRepository:
             if subtract:
                 amount = amount * -1
             if product.quantity_in_stock + amount < 0:
-                raise ProductQuantityInStockError(f"Quantity in stock can not be under 0.", 400)
+                raise ProductQuantityInStockSubtractionError("Quantity in stock can not be under 0.", 400)
             product.quantity_in_stock += amount
             self.db.add(product)
             self.db.commit()
@@ -83,3 +83,11 @@ class ProductRepository:
             return product
         except Exception as e:
             raise e
+
+    def read_products_for_car_brand(self, car_brand: str):
+        products = self.db.query(Product).filter(Product.for_car_brand.ilike(f"%{car_brand}%")).all()
+        return products
+
+    def read_products_by_category_id(self, product_category_id: str):
+        products = self.db.query(Product).filter(Product.product_category_id == product_category_id).all()
+        return products

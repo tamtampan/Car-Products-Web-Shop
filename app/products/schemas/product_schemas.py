@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from pydantic import UUID4
+from pydantic.types import UUID4, PositiveInt, PositiveFloat
 from app.products.schemas import ProducerSchema, ProductCategorySchema
 
 
@@ -8,7 +8,7 @@ class ProductSchema(BaseModel):
     name: str
     description: str
     code: str
-    price: float
+    price: PositiveFloat
     for_car_brand: str
     quantity_in_stock: int
     producer_id: str
@@ -24,7 +24,7 @@ class ProductSchemaIn(BaseModel):
     name: str
     description: str
     code: str
-    price: float
+    price: PositiveFloat
     for_car_brand: str
     quantity_in_stock: int
     producer_id: str

@@ -1,3 +1,4 @@
+from pydantic import ValidationError
 from app.carts.services import CartItemService, ShoppingCartService
 from app.products.services import ProductService
 from fastapi import HTTPException, Response
@@ -18,11 +19,13 @@ class CartItemController:
             raise HTTPException(status_code=400, detail=f"You can't create cart item with no existing shopping cart.")
         except ProductNotFoundException:
             raise HTTPException(status_code=400, detail=f"You can't create cart item with no existing product.")
+        except ValidationError:
+            raise HTTPException(status_code=400, detail="Quantity can not be under 1.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(cart_item_id: str):
+    def read_by_id(cart_item_id: str):
         try:
             cart_item = CartItemService.read_by_id(cart_item_id)
             return cart_item
@@ -32,7 +35,7 @@ class CartItemController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             cart_item = CartItemService.read_all()
             return cart_item
@@ -56,5 +59,7 @@ class CartItemController:
             return cart_item
         except CartItemNotFoundException as e:
             raise HTTPException(status_code=e.code, detail=e.message)
+        except ValidationError:
+            raise HTTPException(status_code=400, detail="Quantity can not be under 1.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

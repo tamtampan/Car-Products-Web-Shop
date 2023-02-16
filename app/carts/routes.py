@@ -17,12 +17,12 @@ def create_shopping_cart(shopping_cart: ShoppingCartSchemaIn):
 
 @shopping_cart_router.get("/shopping-cart-id", response_model=ShoppingCartSchema)
 def get_shopping_cart_by_id(shopping_cart_id: str):
-    return ShoppingCartController.get_by_id(shopping_cart_id)
+    return ShoppingCartController.read_by_id(shopping_cart_id)
 
 
 @shopping_cart_router.get("/get-all-shopping-carts", response_model=list[ShoppingCartSchema])
 def get_all_shopping_carts():
-    return ShoppingCartController.get_all()
+    return ShoppingCartController.read_all()
 
 
 @shopping_cart_router.delete("/")
@@ -48,12 +48,12 @@ def create_cart_item(cart_item: CartItemSchemaIn):
 
 @cart_item_router.get("/id", response_model=CartItemSchema)
 def get_cart_item_by_id(cart_item_id: str):
-    return CartItemController.get_by_id(cart_item_id)
+    return CartItemController.read_by_id(cart_item_id)
 
 
 @cart_item_router.get("/get-all-cart-items", response_model=list[CartItemSchema])
 def get_all_cart_items():
-    return CartItemController.get_all()
+    return CartItemController.read_all()
 
 
 @cart_item_router.delete("/")

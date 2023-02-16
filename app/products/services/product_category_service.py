@@ -1,5 +1,6 @@
 from app.products.repositories.product_category_repository import ProductCategoryRepository
 from app.db.database import SessionLocal
+from app.products.exceptions import ProductCategoryNotFoundException
 
 
 class ProductCategoryService:
@@ -55,5 +56,17 @@ class ProductCategoryService:
             with SessionLocal() as db:
                 product_category_repository = ProductCategoryRepository(db)
                 return product_category_repository.read_by_name(name)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def read_category_name_like(name: str):
+        try:
+            with SessionLocal() as db:
+                product_category_repository = ProductCategoryRepository(db)
+                product_category = product_category_repository.read_category_name_like(name)
+                if product_category is None:
+                    raise ProductCategoryNotFoundException()
+                return product_category
         except Exception as e:
             raise e

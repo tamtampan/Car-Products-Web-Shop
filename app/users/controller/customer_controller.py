@@ -21,7 +21,7 @@ class CustomerController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(customer_id: str):
+    def read_by_id(customer_id: str):
         try:
             customer = CustomerService.read_by_id(customer_id)
             return customer
@@ -31,7 +31,7 @@ class CustomerController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all():
         try:
             customers = CustomerService.read_all()
             return customers

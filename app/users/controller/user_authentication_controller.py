@@ -76,11 +76,11 @@ class JWTBearer(HTTPBearer):
             if payload.get("role") != self.role:
                 raise HTTPException(
                     status_code=403,
-                    detail="User with provided role is not permitted to access this " "route.",
+                    detail="User with provided role is not permitted to access this route.",
                 )
             return credentials.credentials
         else:
-            raise HTTPException(status_code=403, detail="Invalid authorization code.")
+            raise HTTPException(status_code=403, detail="Invalid authorization code.")  # TODO ovaj deo se ne aktivira kada treba
 
     def verify_jwt(self, jwtoken: str) -> dict:
         is_token_valid: bool = False

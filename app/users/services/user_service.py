@@ -10,7 +10,7 @@ from app.users.exceptions import UserInvalidPassword
 class UserService:
 
     @staticmethod
-    def create_user(email, password: str):  # -> FacultyExceptionCode or Faculty:////EmailStr?
+    def create_user(email, password: str):
         try:
             with SessionLocal() as db:
                 user_repository = UserRepository(db)
@@ -35,7 +35,7 @@ class UserService:
             try:
                 user_repository = UserRepository(db)
                 user = user_repository.read_by_email(email)
-                if hashlib.sha256(bytes(password, "utf-8")).hexdigest() != user.password: # ZASTO OVDE UVEK VRACA TRUE
+                if hashlib.sha256(bytes(password, "utf-8")).hexdigest() != user.password:
                     raise UserInvalidPassword(message="Invalid password for this user.", code=401)
                 return user
             except Exception as e:

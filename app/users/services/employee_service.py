@@ -5,11 +5,11 @@ from app.db.database import SessionLocal
 class EmployeeService:
 
     @staticmethod
-    def create(name: str, surname: str, phone: str, job_title: str, user_id: str):
+    def create(name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str):
         with SessionLocal() as db:
             try:
                 employee_repository = EmployeeRepository(db)
-                return employee_repository.create(name, surname, phone, job_title, user_id)
+                return employee_repository.create(name, surname, phone, job_title, user_id, office_id)
             except Exception as e:
                 raise e
 

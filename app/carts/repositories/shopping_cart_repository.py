@@ -1,4 +1,3 @@
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.carts.models import ShoppingCart
 from app.carts.exceptions import ShoppingCartNotFoundException, ShoppingCartTotalCostError
@@ -11,13 +10,11 @@ class ShoppingCartRepository:
 
     def create(self, customer_id: str):
         try:
-            shopping_cart = ShoppingCart(total_cost=0, customer_id=customer_id)
+            shopping_cart = ShoppingCart(customer_id)
             self.db.add(shopping_cart)
             self.db.commit()
             self.db.refresh(shopping_cart)
             return shopping_cart
-        except IntegrityError as e:
-            raise e
         except Exception as e:
             raise e
 
@@ -28,8 +25,11 @@ class ShoppingCartRepository:
         return shopping_cart
 
     def read_all(self):
-        shopping_cart = self.db.query(ShoppingCart).all()
-        return shopping_cart
+        try:
+            shopping_carts = self.db.query(ShoppingCart).all()
+            return shopping_carts
+        except Exception as e:
+            raise e
 
     def delete_by_id(self, shopping_cart_id: str):
         try:
@@ -54,7 +54,7 @@ class ShoppingCartRepository:
             if subtract:
                 amount = amount * -1
             if shopping_cart.total_cost + amount < 0:
-                raise ShoppingCartTotalCostError(f"Total cost can not be under 0", 400)
+                raise ShoppingCartTotalCostError("Total cost can not be under 0", 400)
             shopping_cart.total_cost += amount
             self.db.add(shopping_cart)
             self.db.commit()

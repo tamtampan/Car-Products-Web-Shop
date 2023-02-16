@@ -13,12 +13,12 @@ def create_office(office: OfficeSchemaIn):
 
 @office_router.get("/id", response_model=OfficeSchema)
 def get_office_by_id(office_id: str):
-    return OfficeController.get_by_id(office_id)
+    return OfficeController.read_by_id(office_id)
 
 
 @office_router.get("/get-all-offices", response_model=list[OfficeSchema])
 def get_all_offices():
-    return OfficeController.get_all()
+    return OfficeController.read_all()
 
 
 @office_router.delete("/")

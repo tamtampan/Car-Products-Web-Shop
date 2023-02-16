@@ -60,3 +60,21 @@ class ProductService:
                 return product_repository.update_quantity_in_stock(product_id, amount, subtract)
         except Exception as e:
             raise e
+
+    @staticmethod
+    def read_products_for_car_brand(car_brand: str):
+        try:
+            with SessionLocal() as db:
+                product_repository = ProductRepository(db)
+                return product_repository.read_products_for_car_brand(car_brand)
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def read_products_by_category_id(product_category_id: str):
+        try:
+            with SessionLocal() as db:
+                product_repository = ProductRepository(db)
+                return product_repository.read_products_by_category_id(product_category_id)
+        except Exception as e:
+            raise e

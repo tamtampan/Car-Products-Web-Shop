@@ -41,7 +41,7 @@ class UserController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(user_id: str):
+    def read_by_id(user_id: str):
         try:
             user = UserService.read_by_id(user_id)
             return user
@@ -51,7 +51,7 @@ class UserController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_email(email: str):
+    def read_by_email(email: str):
         try:
             user = UserService.read_by_email(email)
             return user
@@ -61,7 +61,7 @@ class UserController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():  # da li se ovde raisuje exception ako je len od liste = 0
+    def read_all():  # da li se ovde raisuje exception ako je len od liste = 0
         try:
             users = UserService.read_all()
             return users

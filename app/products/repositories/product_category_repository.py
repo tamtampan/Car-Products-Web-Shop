@@ -66,3 +66,7 @@ class ProductCategoryRepository:
             return product_category
         except Exception as e:
             raise e
+
+    def read_category_name_like(self, name: str):
+        product_category = self.db.query(ProductCategory).filter(ProductCategory.name.ilike(f"%{name}%")).first()
+        return product_category

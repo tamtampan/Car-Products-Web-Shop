@@ -26,22 +26,22 @@ def login_user(user: UserSchemaIn):
     return UserController.login_user(user.email, user.password)
 
 
-@user_router.get("/user-id", response_model=UserSchema)
+@user_router.get("/user-id", response_model=UserSchema, dependencies=[Depends(JWTBearer("super_user"))])
 def get_by_id(user_id: str):
-    return UserController.get_by_id(user_id)
+    return UserController.read_by_id(user_id)
 
 
 @user_router.get("/email", response_model=UserSchema)
 def get_by_email(email: str):
-    return UserController.get_by_email(email)
+    return UserController.read_by_email(email)
 
 
 @user_router.get("/get-all-users", response_model=list[UserSchema])
 def get_all_users():
-    return UserController.get_all()
+    return UserController.read_all()
 
 
-@user_router.delete("/")
+@user_router.delete("/", dependencies=[Depends(JWTBearer("super_user"))])
 def delete_user_by_id(user_id: str):
     return UserController.delete_by_id(user_id)
 
@@ -65,12 +65,12 @@ def create_customer(customer: CustomerSchemaIn):
 
 @customer_router.get("/customer-id", response_model=CustomerSchema)
 def get_customer_by_id(customer_id: str):
-    return CustomerController.get_by_id(customer_id)
+    return CustomerController.read_by_id(customer_id)
 
 
 @customer_router.get("/get-all-customers", response_model=list[CustomerSchema])
 def get_all_customers():
-    return CustomerController.get_all()
+    return CustomerController.read_all()
 
 
 @customer_router.delete("/")
@@ -97,12 +97,12 @@ def create_employee(employee: EmployeeSchemaIn):
 
 @employee_router.get("/employee-id", response_model=EmployeeSchema)
 def get_employee_by_id(employee_id: str):
-    return EmployeeController.get_by_id(employee_id)
+    return EmployeeController.read_by_id(employee_id)
 
 
 @employee_router.get("/get-all-employees", response_model=list[EmployeeSchema])
 def get_all_employees():
-    return EmployeeController.get_all()
+    return EmployeeController.read_all()
 
 
 @employee_router.delete("/")
