@@ -1,5 +1,4 @@
-from pydantic import BaseModel
-from pydantic import UUID4
+from pydantic import BaseModel, UUID4
 from app.users.schemas import CustomerSchema
 
 
@@ -7,7 +6,7 @@ class ShoppingCartSchema(BaseModel):
     shopping_cart_id: UUID4
     total_cost: float
     customer_id: str
-    customer: CustomerSchema
+    # customer: CustomerSchema
 
     class Config:
         orm_mode = True

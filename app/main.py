@@ -7,6 +7,7 @@ from app.users.routes import user_router, customer_router, employee_router
 from app.products.routes import product_category_router, producer_router, product_router
 from app.offices.routes import office_router
 from app.carts.routes import shopping_cart_router, cart_item_router
+from app.shopping_orders.routes import shopping_order_router, shopping_order_item_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +23,8 @@ def init_app():
     web_app.include_router(shopping_cart_router)
     web_app.include_router(product_router)
     web_app.include_router(cart_item_router)
+    web_app.include_router(shopping_order_router)
+    web_app.include_router(shopping_order_item_router)
 
     return web_app
 

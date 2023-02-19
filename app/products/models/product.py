@@ -7,17 +7,17 @@ from app.db import Base
 
 class Product(Base):
     __tablename__ = "product"
-    product_id = Column(String(50), primary_key=True, default=uuid4)
+    product_id = Column(String(100), primary_key=True, default=uuid4)
     name = Column(String(100), nullable=False)
-    description = Column(String(500))
-    code = Column(String(50), unique=True)
+    description = Column(String(500), nullable=False)
+    code = Column(String(50), unique=True, nullable=False)
     price = Column(Float, nullable=False)
-    for_car_brand = Column(String(100))
-    quantity_in_stock = Column(Integer)
+    for_car_brand = Column(String(100), nullable=True)
+    quantity_in_stock = Column(Integer, nullable=False)
 
-    producer_id = Column(String(50), ForeignKey("producer.producer_id"), nullable=False)
+    producer_id = Column(String(100), ForeignKey("producer.producer_id"), nullable=False)
     producer = relationship("Producer", lazy='subquery')
-    product_category_id = Column(String(50), ForeignKey("product_category.product_category_id"), nullable=False)
+    product_category_id = Column(String(100), ForeignKey("product_category.product_category_id"), nullable=False)
     product_category = relationship("ProductCategory", lazy='subquery')
 
     def __init__(self, name, description, code, price, for_car_brand,

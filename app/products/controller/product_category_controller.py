@@ -7,7 +7,7 @@ from app.products.exceptions import *
 class ProductCategoryController:
 
     @staticmethod
-    def create(name: str):
+    def create(name: str) -> object:
         try:
             product_category = ProductCategoryService.create(name)
             return product_category
@@ -17,48 +17,60 @@ class ProductCategoryController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_id(product_category_id: str):
+    def read_by_id(product_category_id: str) -> object:
         try:
             product_category = ProductCategoryService.read_by_id(product_category_id)
             if product_category:
                 return product_category
-        except ProductCategoryNotFoundException as e:
+        except ProductCategoryNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_by_name(name: str):
+    def read_by_name(name: str) -> object:
         try:
             product_category = ProductCategoryService.read_by_name(name)
             if product_category:
                 return product_category
-        except ProductCategoryNotFoundException as e:
+        except ProductCategoryNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def get_all():
+    def read_all() -> list[object]:
         product_categories = ProductCategoryService.read_all()
         return product_categories
 
     @staticmethod
-    def delete_by_id(product_category_id: str):
+    def delete_by_id(product_category_id: str) -> Response:
         try:
             ProductCategoryService.delete_by_id(product_category_id)
             return Response(content=f"Product category with id - {product_category_id} is deleted")
-        except ProductCategoryNotFoundException as e:
+        except ProductCategoryNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
+        except IntegrityError:
+            raise HTTPException(status_code=400, detail="Can not delete product category with existing products.")
         except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def update_name(product_category_id: str, new_name: str):
+    def update_name(product_category_id: str, new_name: str) -> object:
         try:
             product_category = ProductCategoryService.update_name(product_category_id, new_name)
             return product_category
-        except ProductCategoryNotFoundException as e:
+        except ProductCategoryNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def read_category_name_like(name: str) -> object:
+        try:
+            product_category = ProductCategoryService.read_category_name_like(name)
+            return product_category
+        except ProductCategoryNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

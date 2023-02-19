@@ -1,7 +1,5 @@
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.carts.models import ShoppingCart
-from app.carts.exceptions import ShoppingCartNotFoundException, ShoppingCartTotalCostError
 
 
 class ShoppingCartRepository:
@@ -9,52 +7,53 @@ class ShoppingCartRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, customer_id: str):
+    def create(self, customer_id: str) -> object:
         try:
-            shopping_cart = ShoppingCart(total_cost=0, customer_id=customer_id)
+            shopping_cart = ShoppingCart(customer_id)
             self.db.add(shopping_cart)
             self.db.commit()
             self.db.refresh(shopping_cart)
             return shopping_cart
-        except IntegrityError as e:
-            raise e
         except Exception as e:
             raise e
 
-    def read_by_id(self, shopping_cart_id: str):
-        shopping_cart = self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
-        if shopping_cart is None:
-            raise ShoppingCartNotFoundException(f"Shopping cart with provided id: {shopping_cart_id} not found.", 400)
-        return shopping_cart
+    def read_by_id(self, shopping_cart_id: str) -> object:
+        try:
+            shopping_cart = self.db.query(ShoppingCart).filter\
+                (ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            return shopping_cart
+        except Exception as e:
+            raise e
 
-    def read_all(self):
-        shopping_cart = self.db.query(ShoppingCart).all()
-        return shopping_cart
+    def read_all(self) -> list[object]:
+        try:
+            shopping_carts = self.db.query(ShoppingCart).all()
+            return shopping_carts
+        except Exception as e:
+            raise e
 
-    def delete_by_id(self, shopping_cart_id: str):
+    def delete_by_id(self, shopping_cart_id: str) -> bool or None:
         try:
             shopping_cart = \
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
             if shopping_cart is None:
-                raise ShoppingCartNotFoundException(f"Shopping cart with provided id: "
-                                                    f"{shopping_cart_id} not found.", 400)
+                return None
             self.db.delete(shopping_cart)
             self.db.commit()
             return True
         except Exception as e:
             raise e
 
-    def update(self, shopping_cart_id: str, amount: float, subtract: bool = False):
+    def update(self, shopping_cart_id: str, amount: float, subtract: bool = False) -> object:
         try:
             shopping_cart = \
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
             if shopping_cart is None:
-                raise ShoppingCartNotFoundException \
-                    (f"Shopping cart with provided id: {shopping_cart_id} not found.", 400)
+                return None
             if subtract:
                 amount = amount * -1
             if shopping_cart.total_cost + amount < 0:
-                raise ShoppingCartTotalCostError(f"Total cost can not be under 0", 400)
+                return False
             shopping_cart.total_cost += amount
             self.db.add(shopping_cart)
             self.db.commit()
