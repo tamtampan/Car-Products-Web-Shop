@@ -90,4 +90,5 @@ class JWTBearer(HTTPBearer):
             payload = None
         if payload:
             is_token_valid = True
-        return {"valid": is_token_valid, "role": payload["role"]}
+            return {"valid": is_token_valid, "role": payload["role"]}
+        return {"valid": is_token_valid}

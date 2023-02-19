@@ -1,29 +1,36 @@
 from app.users.repositories.employee_repository import EmployeeRepository
 from app.db.database import SessionLocal
+from app.users.exceptions import EmployeeNotFoundError
+from sqlalchemy.exc import IntegrityError
 
 
 class EmployeeService:
 
     @staticmethod
-    def create(name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str):
-        with SessionLocal() as db:
-            try:
-                employee_repository = EmployeeRepository(db)
-                return employee_repository.create(name, surname, phone, job_title, user_id, office_id)
-            except Exception as e:
-                raise e
-
-    @staticmethod
-    def read_by_id(employee_id: str):
+    def create(name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str) -> object:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
-                return employee_repository.read_by_id(employee_id)
+                return employee_repository.create(name, surname, phone, job_title, user_id, office_id)
+        except IntegrityError as e:
+            raise e
         except Exception as e:
             raise e
 
     @staticmethod
-    def read_all():
+    def read_by_id(employee_id: str) -> object:
+        try:
+            with SessionLocal() as db:
+                employee_repository = EmployeeRepository(db)
+                employee = employee_repository.read_by_id(employee_id)
+                if employee is None:
+                    raise EmployeeNotFoundError()
+                return employee
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def read_all() -> list[object]:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
@@ -32,19 +39,26 @@ class EmployeeService:
             raise e
 
     @staticmethod
-    def delete_by_id(employee_id: str):
+    def delete_by_id(employee_id: str) -> bool:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
-                return employee_repository.delete_by_id(employee_id)
+                employee = employee_repository.delete_by_id(employee_id)
+                if employee is None:
+                    raise EmployeeNotFoundError()
+                return employee
         except Exception as e:
             raise e
 
     @staticmethod
-    def update(employee_id: str, name: str = None, surname: str = None, phone: str = None, job_title: str = None):
+    def update(employee_id: str, name: str = None, surname: str = None, phone: str = None,
+               job_title: str = None) -> object:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
-                return employee_repository.update(employee_id, name, surname, phone, job_title)
+                employee = employee_repository.update(employee_id, name, surname, phone, job_title)
+                if employee is None:
+                    raise EmployeeNotFoundError()
+                return employee
         except Exception as e:
             raise e

@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from pydantic.types import UUID4, PositiveInt, PositiveFloat
-from app.products.schemas import ProducerSchema, ProductCategorySchema
+from pydantic.types import UUID4, PositiveFloat
+from typing import Optional
 
 
 class ProductSchema(BaseModel):
@@ -9,12 +9,10 @@ class ProductSchema(BaseModel):
     description: str
     code: str
     price: PositiveFloat
-    for_car_brand: str
+    for_car_brand: Optional[str]
     quantity_in_stock: int
     producer_id: str
-    producer: ProducerSchema
     product_category_id: str
-    product_category: ProductCategorySchema
 
     class Config:
         orm_mode = True

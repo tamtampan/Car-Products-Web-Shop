@@ -1,1 +1,2 @@
 from .shopping_order_repository import ShoppingOrderRepository
+from .shopping_order_item_repository import ShoppingOrderItemRepository

@@ -15,7 +15,7 @@ class Employee(Base):
 
     user_id = Column(String(100), ForeignKey("user.user_id"), nullable=False, unique=True)
     user = relationship("User", lazy='subquery')
-    office_id = Column(String(100), ForeignKey("office.office_id"))
+    office_id = Column(String(100), ForeignKey("office.office_id"), nullable=False)
     office = relationship("Office", lazy='subquery')
 
     def __init__(self, name, surname, phone, job_title, user_id, office_id):

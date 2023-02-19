@@ -1,7 +1,5 @@
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.products.models import Product
-from app.products.exceptions import ProductNotFoundException, ProductQuantityInStockSubtractionError
 
 
 class ProductRepository:
@@ -10,7 +8,7 @@ class ProductRepository:
         self.db = db
 
     def create(self, name: str, description: str, code: str, price: float, for_car_brand: str,
-               quantity_in_stock: int, producer_id: str, product_category_id: str):
+               quantity_in_stock: int, producer_id: str, product_category_id: str) -> object:
         try:
             product = Product(name, description, code, price, for_car_brand, quantity_in_stock, producer_id,
                               product_category_id)
@@ -18,26 +16,28 @@ class ProductRepository:
             self.db.commit()
             self.db.refresh(product)
             return product
-        except IntegrityError as e:
-            raise e
         except Exception as e:
             raise e
 
-    def read_by_id(self, product_id: str):
-        product = self.db.query(Product).filter(Product.product_id == product_id).first()
-        if product is None:
-            raise ProductNotFoundException(f"Product with provided id: {product_id} not found.", 400)
-        return product
+    def read_by_id(self, product_id: str) -> object:
+        try:
+            product = self.db.query(Product).filter(Product.product_id == product_id).first()
+            return product
+        except Exception as e:
+            raise e
 
-    def read_all(self):
-        products = self.db.query(Product).all()
-        return products
+    def read_all(self) -> list[object]:
+        try:
+            products = self.db.query(Product).all()
+            return products
+        except Exception as e:
+            raise e
 
-    def delete_by_id(self, product_id: str):
+    def delete_by_id(self, product_id: str) -> bool or None:
         try:
             product = self.db.query(Product).filter(Product.product_id == product_id).first()
             if product is None:
-                raise ProductNotFoundException(f"Product with provided id: {product_id} not found.", 400)
+                return None
             self.db.delete(product)
             self.db.commit()
             return True
@@ -45,11 +45,11 @@ class ProductRepository:
             raise e
 
     def update(self, product_id: str, name: str = None, description: str = None, price: float = None,
-               for_car_brand: str = None, quantity_in_stock: int = None):
+               for_car_brand: str = None, quantity_in_stock: int = None) -> object:
         try:
             product = self.db.query(Product).filter(Product.product_id == product_id).first()
             if product is None:
-                raise ProductNotFoundException(f"Product with provided id: {product_id} not found.", 400)
+                return None
             if name is not None:
                 product.name = name
             if description is not None:
@@ -67,15 +67,15 @@ class ProductRepository:
         except Exception as e:
             raise e
 
-    def update_quantity_in_stock(self, product_id: str, amount: int, subtract: bool = False):
+    def update_quantity_in_stock(self, product_id: str, amount: int, subtract: bool = False) -> object:
         try:
             product = self.db.query(Product).filter(Product.product_id == product_id).first()
             if product is None:
-                raise ProductNotFoundException(f"Product with provided id: {product_id} not found.", 400)
+                return None
             if subtract:
                 amount = amount * -1
             if product.quantity_in_stock + amount < 0:
-                raise ProductQuantityInStockSubtractionError("Quantity in stock can not be under 0.", 400)
+                return False
             product.quantity_in_stock += amount
             self.db.add(product)
             self.db.commit()
@@ -84,10 +84,30 @@ class ProductRepository:
         except Exception as e:
             raise e
 
-    def read_products_for_car_brand(self, car_brand: str):
-        products = self.db.query(Product).filter(Product.for_car_brand.ilike(f"%{car_brand}%")).all()
-        return products
+    def read_products_for_car_brand(self, car_brand: str) -> list[object]:
+        try:
+            products = self.db.query(Product).filter(Product.for_car_brand.ilike(f"{car_brand}%")).all()
+            return products
+        except Exception as e:
+            raise e
 
-    def read_products_by_category_id(self, product_category_id: str):
-        products = self.db.query(Product).filter(Product.product_category_id == product_category_id).all()
-        return products
+    def read_products_by_category_id(self, product_category_id: str) -> list[object]:
+        try:
+            products = self.db.query(Product).filter(Product.product_category_id == product_category_id).all()
+            return products
+        except Exception as e:
+            raise e
+
+    def read_products_name_like(self, name: str) -> list[object]:
+        try:
+            products = self.db.query(Product).filter(Product.name.ilike(f"{name}%")).all()
+            return products
+        except Exception as e:
+            raise e
+
+    def read_by_code(self, code: str) -> object:
+        try:
+            product = self.db.query(Product).filter(Product.code == code).first()
+            return product
+        except Exception as e:
+            raise e

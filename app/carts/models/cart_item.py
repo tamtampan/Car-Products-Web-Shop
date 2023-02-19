@@ -6,6 +6,7 @@ from app.db import Base
 
 
 class CartItem(Base):
+
     __tablename__ = "cart_item"
     cart_item_id = Column(String(100), primary_key=True, default=uuid4)
     quantity = Column(Integer, default=1, nullable=False)

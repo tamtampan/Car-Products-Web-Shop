@@ -1,38 +1,48 @@
 from app.products.repositories.producer_repository import ProducerRepository
+from sqlalchemy.exc import IntegrityError
 from app.db.database import SessionLocal
+from app.products.exceptions import ProducerNotFoundError
 
 
 class ProducerService:
 
     @staticmethod
-    def create(name: str, address: str, description: str):
+    def create(name: str, address: str, description: str) -> object:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
                 return producer_repository.create(name, address, description)
+        except IntegrityError as e:
+            raise e
         except Exception as e:
             raise e
 
     @staticmethod
-    def read_by_id(producer_id: str):
+    def read_by_id(producer_id: str) -> object:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                return producer_repository.read_by_id(producer_id)
+                producer = producer_repository.read_by_id(producer_id)
+                if producer is None:
+                    raise ProducerNotFoundError()
+                return producer
         except Exception as e:
             raise e
 
     @staticmethod
-    def read_by_name(name: str):
+    def read_by_name(name: str) -> object:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                return producer_repository.read_by_name(name)
+                producer = producer_repository.read_by_name(name)
+                if producer is None:
+                    raise ProducerNotFoundError()
+                return producer
         except Exception as e:
             raise e
 
     @staticmethod
-    def read_all():
+    def read_all() -> list[object]:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
@@ -41,19 +51,27 @@ class ProducerService:
             raise e
 
     @staticmethod
-    def delete_by_id(producer_id: str):
+    def delete_by_id(producer_id: str) -> bool:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                return producer_repository.delete_by_id(producer_id)
+                producer = producer_repository.delete_by_id(producer_id)
+                if producer is None:
+                    raise ProducerNotFoundError()
+                return producer
+        except IntegrityError as e:
+            raise e
         except Exception as e:
             raise e
 
     @staticmethod
-    def update(producer_id: str, name: str = None, address: str = None, description: str = None):
+    def update(producer_id: str, name: str = None, address: str = None, description: str = None) -> object:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                return producer_repository.update(producer_id, name, address, description)
+                producer = producer_repository.update(producer_id, name, address, description)
+                if producer is None:
+                    raise ProducerNotFoundError()
+                return producer
         except Exception as e:
             raise e

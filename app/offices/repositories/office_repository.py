@@ -1,7 +1,5 @@
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 from app.offices.models import Office
-from app.offices.exceptions import *
 
 
 class OfficeRepository:
@@ -9,33 +7,36 @@ class OfficeRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, name, phone, address, city, country, postal_code, territory):
+    def create(self, name: str, phone: str, address: str, city: str, country: str, postal_code: str,
+               territory: str) -> object:
         try:
             office = Office(name, phone, address, city, country, postal_code, territory)
             self.db.add(office)
             self.db.commit()
             self.db.refresh(office)
             return office
-        except IntegrityError as e:
-            raise e
         except Exception as e:
             raise e
 
-    def read_by_id(self, office_id: str):
-        office = self.db.query(Office).filter(Office.office_id == office_id).first()
-        if office is None:
-            raise OfficeNotFoundException(f"Office with provided id - {office_id} not found.", 400)
-        return office
+    def read_by_id(self, office_id: str) -> object:
+        try:
+            office = self.db.query(Office).filter(Office.office_id == office_id).first()
+            return office
+        except Exception as e:
+            raise e
 
-    def read_all(self):
-        offices = self.db.query(Office).all()
-        return offices
+    def read_all(self) -> list[object]:
+        try:
+            offices = self.db.query(Office).all()
+            return offices
+        except Exception as e:
+            raise e
 
-    def delete_by_id(self, office_id: str):
+    def delete_by_id(self, office_id: str) -> bool or None:
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             if office is None:
-                raise OfficeNotFoundException(f"Office with provided id - {office_id} not found.", 400)
+                return None
             self.db.delete(office)
             self.db.commit()
             return True
@@ -43,11 +44,11 @@ class OfficeRepository:
             raise e
 
     def update(self, office_id: str, name: str = None, phone: str = None, address: str = None, city: str = None,
-               country: str = None, postal_code: str = None, territory: str = None):
+               country: str = None, postal_code: str = None, territory: str = None) -> object:
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             if office is None:
-                raise OfficeNotFoundException(f"Office with provided id - {office_id} not found.", 400)
+                return None
             if name is not None:
                 office.name = name
             if phone is not None:
@@ -68,3 +69,9 @@ class OfficeRepository:
             return office
         except Exception as e:
             raise e
+
+    def read_by_name(self, name: str) -> object:
+        office = self.db.query(Office).filter(Office.name.ilike(f"{name}%")).first()
+        if office is None:
+            return None
+        return office
