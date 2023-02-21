@@ -35,7 +35,22 @@ class CartItemService:
         try:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
-                return cart_item_repository.read_all()
+                cart_items = cart_item_repository.read_all()
+                if len(cart_items) == 0:
+                    raise CartItemNotFoundError()
+                return cart_items
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def read_by_shopping_cart_id(shopping_cart_id: str) -> list[object]:
+        try:
+            with SessionLocal() as db:
+                cart_item_repository = CartItemRepository(db)
+                cart_items = cart_item_repository.read_by_shopping_cart_id(shopping_cart_id)
+                if len(cart_items) == 0:
+                    raise CartItemNotFoundError()
+                return cart_items
         except Exception as e:
             raise e
 

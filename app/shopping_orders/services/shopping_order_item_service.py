@@ -31,7 +31,10 @@ class ShoppingOrderItemService:
         try:
             with SessionLocal() as db:
                 shopping_order_item_repository = ShoppingOrderItemRepository(db)
-                return shopping_order_item_repository.read_all()
+                shopping_orders = shopping_order_item_repository.read_all()
+                if len(shopping_orders) == 0:
+                    raise ShoppingOrderItemNotFoundError()
+                return shopping_orders
         except Exception as e:
             raise e
 
@@ -52,6 +55,9 @@ class ShoppingOrderItemService:
         try:
             with SessionLocal() as db:
                 shopping_order_item_repository = ShoppingOrderItemRepository(db)
-                return shopping_order_item_repository.read_items_by_shopping_order_id(shopping_order_id)
+                shopping_orders = shopping_order_item_repository.read_items_by_shopping_order_id(shopping_order_id)
+                if len(shopping_orders) == 0:
+                    raise ShoppingOrderItemNotFoundError()
+                return shopping_orders
         except Exception as e:
             raise e

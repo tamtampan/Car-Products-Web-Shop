@@ -10,7 +10,7 @@ class CartItemSchema(BaseModel):
     shopping_cart_id: str
     # shopping_cart: ShoppingCartSchema
     product_id: str
-    # product: ProductSchema
+    product: ProductSchema
 
     class Config:
         orm_mode = True

@@ -43,6 +43,8 @@ class ShoppingOrderItemController:
         try:
             shopping_order_items = ShoppingOrderItemService.read_all()
             return shopping_order_items
+        except ShoppingOrderItemNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="There is no shopping order items in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -64,5 +66,7 @@ class ShoppingOrderItemController:
             return shopping_order_items
         except ShoppingOrderNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
+        except ShoppingOrderItemNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="There is no shopping order items in this order.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

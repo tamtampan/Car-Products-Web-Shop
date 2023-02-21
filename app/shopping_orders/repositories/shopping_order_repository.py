@@ -8,7 +8,7 @@ class ShoppingOrderRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, total_price: float, shipping_cost: float, status: int, order_date: str, shipped_date: str,
+    def create(self, total_price: float, shipping_cost: float, status: int, order_date: str, shipped_date: str or None,
                customer_id: str, office_id: str) -> object:
         try:
             shopping_order = ShoppingOrder(total_price, shipping_cost, order_date, shipped_date, customer_id,

@@ -25,6 +25,13 @@ class ShoppingCartRepository:
         except Exception as e:
             raise e
 
+    def read_by_customer_id(self, customer_id: str) -> object:
+        try:
+            shopping_cart = self.db.query(ShoppingCart).filter(ShoppingCart.customer_id == customer_id).first()
+            return shopping_cart
+        except Exception as e:
+            raise e
+
     def read_all(self) -> list[object]:
         try:
             shopping_carts = self.db.query(ShoppingCart).all()
@@ -55,6 +62,20 @@ class ShoppingCartRepository:
             if shopping_cart.total_cost + amount < 0:
                 return False
             shopping_cart.total_cost += amount
+            self.db.add(shopping_cart)
+            self.db.commit()
+            self.db.refresh(shopping_cart)
+            return shopping_cart
+        except Exception as e:
+            raise e
+
+    def update_set_total_cost(self, shopping_cart_id: str, total_cost: float) -> object:
+        try:
+            shopping_cart = \
+                self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            if shopping_cart is None:
+                return None
+            shopping_cart.total_cost = total_cost
             self.db.add(shopping_cart)
             self.db.commit()
             self.db.refresh(shopping_cart)

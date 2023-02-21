@@ -37,7 +37,10 @@ class ProductService:
         try:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
-                return product_repository.read_all()
+                products = product_repository.read_all()
+                if len(products) == 0:
+                    raise ProductNotFoundError()
+                return products
         except Exception as e:
             raise e
 
@@ -88,7 +91,10 @@ class ProductService:
         try:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
-                return product_repository.read_products_for_car_brand(car_brand)
+                products = product_repository.read_products_for_car_brand(car_brand)
+                if len(products) == 0:
+                    raise ProductNotFoundError()
+                return products
         except Exception as e:
             raise e
 
@@ -97,7 +103,10 @@ class ProductService:
         try:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
-                return product_repository.read_products_by_category_id(product_category_id)
+                products = product_repository.read_products_by_category_id(product_category_id)
+                if len(products) == 0:
+                    raise ProductNotFoundError()
+                return products
         except Exception as e:
             raise e
 
@@ -107,6 +116,8 @@ class ProductService:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
                 products = product_repository.read_all()
+                if len(products) == 0:
+                    raise ProductNotFoundError()
                 keyfun = operator.attrgetter("price")
                 products.sort(key=keyfun, reverse=False)
                 return products
@@ -119,6 +130,8 @@ class ProductService:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
                 products = product_repository.read_all()
+                if len(products) == 0:
+                    raise ProductNotFoundError()
                 keyfun = operator.attrgetter("price")
                 products.sort(key=keyfun, reverse=True)
                 return products
@@ -131,6 +144,8 @@ class ProductService:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
                 products = product_repository.read_all()
+                if len(products) == 0:
+                    raise ProductNotFoundError()
                 keyfun = operator.attrgetter("name")
                 products.sort(key=keyfun)
                 return products
@@ -142,7 +157,10 @@ class ProductService:
         try:
             with SessionLocal() as db:
                 product_repository = ProductRepository(db)
-                return product_repository.read_products_name_like(name)
+                products = product_repository.read_products_name_like(name)
+                if len(products) == 0:
+                    raise ProductNotFoundError()
+                return products
         except Exception as e:
             raise e
 

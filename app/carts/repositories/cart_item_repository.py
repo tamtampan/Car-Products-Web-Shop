@@ -24,6 +24,13 @@ class CartItemRepository:
         except Exception as e:
             raise e
 
+    def read_by_shopping_cart_id(self, shopping_cart_id: str) -> list[object]:
+        try:
+            cart_items = self.db.query(CartItem).filter(CartItem.shopping_cart_id == shopping_cart_id).all()
+            return cart_items
+        except Exception as e:
+            raise e
+
     def read_all(self) -> list[object]:
         try:
             cart_items = self.db.query(CartItem).all()

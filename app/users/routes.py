@@ -3,7 +3,7 @@ from app.users.controller import UserController
 from app.users.controller.customer_controller import CustomerController
 from app.users.controller.employee_controller import EmployeeController
 from app.users.schemas import *
-from app.users.controller.user_authentication_controller import JWTBearer
+from app.users.controller import JWTBearer
 
 user_router = APIRouter(tags=["Users"], prefix="/api/users")
 
@@ -60,6 +60,14 @@ customer_router = APIRouter(tags=["Customers"], prefix="/api/customers")
 
 
 # dependencies=[Depends(JWTBearer("super_user"))]
+
+
+@customer_router.post("/add-customer-with-shopping-cart", response_model=CustomerSchemaOut)
+def create_customer_with_shopping_cart(customer: CustomerSchemaIn) -> object:
+    return CustomerController.create_customer_with_shopping_cart(customer.name, customer.surname, customer.phone,
+                                                                 customer.address,
+                                                                 customer.city, customer.country, customer.postal_code,
+                                                                 customer.user_id)
 
 
 @customer_router.post("/add-new-customer", response_model=CustomerSchema)

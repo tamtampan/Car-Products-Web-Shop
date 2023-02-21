@@ -34,7 +34,10 @@ class ProductCategoryService:
         try:
             with SessionLocal() as db:
                 product_category_repository = ProductCategoryRepository(db)
-                return product_category_repository.read_all()
+                product_categories = product_category_repository.read_all()
+                if len(product_categories) == 0:
+                    raise ProductCategoryNotFoundError()
+                return product_categories
         except Exception as e:
             raise e
 

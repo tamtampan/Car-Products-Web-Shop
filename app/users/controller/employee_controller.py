@@ -39,6 +39,8 @@ class EmployeeController:
         try:
             employee = EmployeeService.read_all()
             return employee
+        except EmployeeNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No employees in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 

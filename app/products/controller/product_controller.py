@@ -40,6 +40,8 @@ class ProductController:
         try:
             products = ProductService.read_all()
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No products in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -83,6 +85,8 @@ class ProductController:
         try:
             products = ProductService.read_products_for_car_brand(car_brand)
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products for {car_brand} in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -95,6 +99,8 @@ class ProductController:
             return products
         except ProductCategoryNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products for {product_category_name} in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -103,6 +109,8 @@ class ProductController:
         try:
             products = ProductService.read_all_products_sorted_by_price_from_lowest()
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -111,6 +119,8 @@ class ProductController:
         try:
             products = ProductService.read_all_products_sorted_by_price_from_highest()
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -119,6 +129,8 @@ class ProductController:
         try:
             products = ProductService.read_all_products_alphabetically_sorted()
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products for in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -127,6 +139,8 @@ class ProductController:
         try:
             products = ProductService.read_products_name_like(name)
             return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=f"No products with name like {name} in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 

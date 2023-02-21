@@ -1,9 +1,17 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Depends
 
 from app.shopping_orders.controller import ShoppingOrderController, ShoppingOrderItemController
 from app.shopping_orders.schemas import *
+from app.users.controller import JWTBearer
+# dependencies=[Depends(JWTBearer("super_user"))]
+
 
 shopping_order_router = APIRouter(tags=["Shopping orders"], prefix="/api/shopping-orders")
+
+
+@shopping_order_router.post("/make-order", response_model=ShoppingOrderSchema)
+def make_order(customer_id: str, office_id: str) -> object:
+    return ShoppingOrderController.make_order(customer_id, office_id)
 
 
 @shopping_order_router.post("/add-new-shopping-order", response_model=ShoppingOrderSchema)

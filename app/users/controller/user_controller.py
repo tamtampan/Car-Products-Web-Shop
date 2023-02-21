@@ -2,6 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from app.users.services import UserService, signJWT
 from fastapi import HTTPException, Response
 from app.users.exceptions import UserInvalidPassword, UserNotFoundError, UserPasswordLenError
+from typing import Dict
 
 
 class UserController:
@@ -31,7 +32,7 @@ class UserController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
-    def login_user(email, password):
+    def login_user(email, password) -> Dict[str, str]:
         try:
             user = UserService.login_user(email, password)
             if user.superuser:
@@ -69,6 +70,8 @@ class UserController:
         try:
             users = UserService.read_all()
             return users
+        except UserNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No users in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
