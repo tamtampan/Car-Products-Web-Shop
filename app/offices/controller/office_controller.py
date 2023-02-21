@@ -29,8 +29,13 @@ class OfficeController:
 
     @staticmethod
     def read_all() -> list[object]:
-        office = OfficeService.read_all()
-        return office
+        try:
+            offices = OfficeService.read_all()
+            return offices
+        except OfficeNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No offices in system.")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def delete_by_id(office_id: str) -> Response:

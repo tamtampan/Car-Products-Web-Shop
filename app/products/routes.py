@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Depends
 from app.products.controller import ProductCategoryController, ProducerController, ProductController
 from app.products.schemas import *
+from app.users.controller import JWTBearer
+# dependencies=[Depends(JWTBearer("super_user"))]
 
 product_category_router = APIRouter(tags=["Product categories"], prefix="/api/product-categories")
 

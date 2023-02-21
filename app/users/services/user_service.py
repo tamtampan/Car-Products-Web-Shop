@@ -41,7 +41,7 @@ class UserService:
             raise e
 
     @staticmethod
-    def login_user(email: str, password: str):
+    def login_user(email: str, password: str) -> object:
         try:
             with SessionLocal() as db:
                 user_repository = UserRepository(db)
@@ -81,7 +81,10 @@ class UserService:
         try:
             with SessionLocal() as db:
                 user_repository = UserRepository(db)
-                return user_repository.read_all()
+                users = user_repository.read_all()
+                if len(users) == 0:
+                    raise UserNotFoundError()
+                return users
         except Exception as e:
             raise e
 

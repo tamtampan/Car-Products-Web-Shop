@@ -33,10 +33,39 @@ class ShoppingCartController:
             raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
+    def read_by_customer_id(customer_id: str) -> object:
+        try:
+            CustomerService.read_by_id(customer_id)
+            shopping_cart = ShoppingCartService.read_by_customer_id(customer_id)
+            return shopping_cart
+        except CustomerNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except ShoppingCartNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def read_hole_cart_by_customer_id(customer_id: str) -> object:
+        try:
+            CustomerService.read_by_id(customer_id)
+            shopping_cart = ShoppingCartService.read_by_customer_id(customer_id)
+
+            return shopping_cart
+        except CustomerNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except ShoppingCartNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
     def read_all() -> list[object]:
         try:
             shopping_cart = ShoppingCartService.read_all()
             return shopping_cart
+        except ShoppingCartNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No shopping cards in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -60,6 +89,16 @@ class ShoppingCartController:
         except ShoppingCartNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except ShoppingCartTotalCostError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def update_set_total_cost(shopping_cart_id: str, total_cost: float) -> object:
+        try:
+            shopping_cart = ShoppingCartService.update_set_total_cost(shopping_cart_id, total_cost)
+            return shopping_cart
+        except ShoppingCartNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

@@ -30,11 +30,26 @@ class ShoppingCartService:
             raise e
 
     @staticmethod
+    def read_by_customer_id(customer_id: str) -> object:
+        try:
+            with SessionLocal() as db:
+                shopping_cart_repository = ShoppingCartRepository(db)
+                shopping_cart = shopping_cart_repository.read_by_customer_id(customer_id)
+                if shopping_cart is None:
+                    raise ShoppingCartNotFoundError()
+                return shopping_cart
+        except Exception as e:
+            raise e
+
+    @staticmethod
     def read_all() -> list[object]:
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
-                return shopping_cart_repository.read_all()
+                shopping_carts = shopping_cart_repository.read_all()
+                if len(shopping_carts) == 0:
+                    raise ShoppingCartNotFoundError()
+                return shopping_carts
         except Exception as e:
             raise e
 
@@ -62,6 +77,18 @@ class ShoppingCartService:
                     raise ShoppingCartNotFoundError()
                 if shopping_cart is False:
                     raise ShoppingCartTotalCostError()
+                return shopping_cart
+        except Exception as e:
+            raise e
+
+    @staticmethod
+    def update_set_total_cost(shopping_cart_id: str, total_cost: float) -> object:
+        try:
+            with SessionLocal() as db:
+                shopping_cart_repository = ShoppingCartRepository(db)
+                shopping_cart = shopping_cart_repository.update_set_total_cost(shopping_cart_id, total_cost)
+                if shopping_cart is None:
+                    raise ShoppingCartNotFoundError()
                 return shopping_cart
         except Exception as e:
             raise e

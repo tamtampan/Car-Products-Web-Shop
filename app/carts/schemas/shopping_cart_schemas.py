@@ -1,5 +1,4 @@
 from pydantic import BaseModel, UUID4
-from app.users.schemas import CustomerSchema
 
 
 class ShoppingCartSchema(BaseModel):

@@ -35,7 +35,10 @@ class OfficeService:
         try:
             with SessionLocal() as db:
                 office_repository = OfficeRepository(db)
-                return office_repository.read_all()
+                offices = office_repository.read_all()
+                if len(offices) == 0:
+                    raise OfficeNotFoundError()
+                return offices
         except Exception as e:
             raise e
 

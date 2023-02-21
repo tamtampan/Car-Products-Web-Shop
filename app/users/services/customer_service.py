@@ -35,7 +35,10 @@ class CustomerService:
         try:
             with SessionLocal() as db:
                 customer_repository = CustomerRepository(db)
-                return customer_repository.read_all()
+                customers = customer_repository.read_all()
+                if len(customers) == 0:
+                    raise CustomerNotFoundError()
+                return customers
         except Exception as e:
             raise e
 
@@ -86,7 +89,7 @@ class CustomerService:
                 customer_repository = CustomerRepository(db)
                 customers = customer_repository.read_customers_by_phone(phone)
                 if len(customers) == 0:
-                    raise CustomerNotFoundError("Customer with provided phone number not found.", 400)
+                    raise CustomerNotFoundError()
                 return customers
         except Exception as e:
             raise e

@@ -46,7 +46,10 @@ class ProducerService:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                return producer_repository.read_all()
+                producers = producer_repository.read_all()
+                if len(producers) == 0:
+                    raise ProducerNotFoundError()
+                return producers
         except Exception as e:
             raise e
 

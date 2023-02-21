@@ -41,6 +41,8 @@ class ProducerController:
         try:
             producers = ProducerService.read_all()
             return producers
+        except ProducerNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No producers in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 

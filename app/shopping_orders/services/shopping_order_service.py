@@ -1,16 +1,36 @@
 from app.shopping_orders.repositories import ShoppingOrderRepository
 from sqlalchemy.exc import IntegrityError
-from app.shopping_orders.exceptions import ShoppingOrderNotFoundError, ShoppingOrderTotalPriceSubtractionError
+from app.shopping_orders.exceptions import ShoppingOrderNotFoundError, ShoppingOrderTotalPriceSubtractionError, \
+    DateNotValid
 from app.db.database import SessionLocal
-from datetime import date
+from datetime import datetime
 
 
 class ShoppingOrderService:
 
     @staticmethod
-    def create(total_price: float, shipping_cost: float, status: int, order_date: str, shipped_date: str,
+    def valid_date(date_str: str) -> bool:
+        earl_date = datetime.strptime("2020-01-01", "%Y-%m-%d")
+        late_date = datetime.strptime("2030-01-01", "%Y-%m-%d")
+        date = datetime.strptime(date_str, "%Y-%m-%d")
+        if earl_date > date or date > late_date:
+            return False
+        else:
+            return True
+
+    @staticmethod
+    def create(total_price: float, shipping_cost: float, status: int, order_date: str, shipped_date: str or None,
                customer_id: str, office_id: str) -> object:
         try:
+            if ShoppingOrderService.valid_date(order_date):
+                if shipped_date is not None:
+                    if ShoppingOrderService.valid_date(shipped_date):
+                        if datetime.strptime(order_date, "%Y-%m-%d") > datetime.strptime(shipped_date, "%Y-%m-%d"):
+                            raise DateNotValid("Shipped date can not be before order date.")
+                    else:
+                        raise DateNotValid("Shipped date not valid. Should be after 2020-01-01 and before 2030-01-01.")
+            else:
+                raise DateNotValid("Order date not valid. Should be after 2020-01-01 and before 2030-01-01.")
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
                 return shopping_order_repository.create(total_price, shipping_cost, status, order_date, shipped_date,
@@ -35,7 +55,10 @@ class ShoppingOrderService:
         try:
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
-                return shopping_order_repository.read_all()
+                shopping_orders = shopping_order_repository.read_all()
+                if len(shopping_orders) == 0:
+                    raise ShoppingOrderNotFoundError()
+                return shopping_orders
         except Exception as e:
             raise e
 
@@ -57,13 +80,23 @@ class ShoppingOrderService:
     def update(shopping_order_id: str, shipping_cost: float = None, status: int = None,
                shipped_date: str = None) -> object:
         try:
+            if shipped_date is not None:
+                if not ShoppingOrderService.valid_date(shipped_date):
+                    raise DateNotValid("Shipped date not valid. Should be after 2020-01-01 and before 2030-01-01.")
             with SessionLocal() as db:
-                shopping_order_repository = ShoppingOrderRepository(db)
-                shopping_order = shopping_order_repository.update\
+                if shipped_date is not None:
+                    shopping_order_repository = ShoppingOrderRepository(db)
+                    old_shopping_order = shopping_order_repository.read_by_id(shopping_order_id)
+                    if old_shopping_order is None:
+                        raise ShoppingOrderNotFoundError()
+                    if datetime.strptime(str(old_shopping_order.order_date), "%Y-%m-%d") > \
+                            datetime.strptime(shipped_date, "%Y-%m-%d"):
+                        raise DateNotValid("Shipped date can not be before order date.")
+                shopping_order = shopping_order_repository.update \
                     (shopping_order_id, shipping_cost, status, shipped_date)
-                if shopping_order is None:
-                    raise ShoppingOrderNotFoundError()
                 return shopping_order
+        except ValueError as e:
+            raise e
         except Exception as e:
             raise e
 
@@ -72,7 +105,10 @@ class ShoppingOrderService:
         try:
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
-                return shopping_order_repository.read_today_shopping_orders()
+                shopping_orders = shopping_order_repository.read_today_shopping_orders()
+                if len(shopping_orders) == 0:
+                    raise ShoppingOrderNotFoundError()
+                return shopping_orders
         except Exception as e:
             raise e
 
@@ -106,7 +142,7 @@ class ShoppingOrderService:
         try:
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
-                shopping_order = shopping_order_repository.update_total_price_for_amount\
+                shopping_order = shopping_order_repository.update_total_price_for_amount \
                     (shopping_order_id, amount, subtract)
                 if shopping_order is False:
                     raise ShoppingOrderTotalPriceSubtractionError()

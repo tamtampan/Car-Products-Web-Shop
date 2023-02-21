@@ -2,13 +2,12 @@ from fastapi import APIRouter, Depends
 from app.carts.controller import ShoppingCartController, CartItemController
 from app.carts.schemas import *
 from fastapi import Response
-
-# from app.users.controller.user_authentication_controller import JWTBearer
-
-shopping_cart_router = APIRouter(tags=["Shopping carts"], prefix="/api/shopping-carts")
-
+from app.users.controller import JWTBearer
 
 # dependencies=[Depends(JWTBearer("super_user"))]
+
+
+shopping_cart_router = APIRouter(tags=["Shopping carts"], prefix="/api/shopping-carts")
 
 
 @shopping_cart_router.post("/add-new-shopping-cart", response_model=ShoppingCartSchema)
@@ -19,6 +18,11 @@ def create_shopping_cart(shopping_cart: ShoppingCartSchemaIn) -> object:
 @shopping_cart_router.get("/shopping-cart-id", response_model=ShoppingCartSchema)
 def get_shopping_cart_by_id(shopping_cart_id: str) -> object:
     return ShoppingCartController.read_by_id(shopping_cart_id)
+
+
+@shopping_cart_router.get("/shopping-cart-customer-id", response_model=ShoppingCartSchema)
+def get_cart_by_customer_id(customer_id: str) -> object:
+    return ShoppingCartController.read_by_customer_id(customer_id)
 
 
 @shopping_cart_router.get("/get-all-shopping-carts", response_model=list[ShoppingCartSchema])
@@ -36,10 +40,20 @@ def update_shopping_cart(shopping_cart_id: str, amount: float, subtract: bool = 
     return ShoppingCartController.update(shopping_cart_id, amount, subtract)
 
 
+# @shopping_cart_router.put("/update/set-total-cost", response_model=ShoppingCartSchema)
+# def update_set_total_cost(shopping_cart_id: str, total_cost: float) -> object:
+#     return ShoppingCartController.update_set_total_cost(shopping_cart_id, total_cost)
+
+
 cart_item_router = APIRouter(tags=["Cart items"], prefix="/api/cart_items")
 
 
 # dependencies=[Depends(JWTBearer("super_user"))]
+
+
+@cart_item_router.post("/add-new-cart-item-by-customer-id", response_model=CartItemSchema)
+def create_cart_item_by_customer_id(quantity: int, customer_id: str, product_id: str) -> object:
+    return CartItemController.create_by_customer_id(quantity, customer_id, product_id)
 
 
 @cart_item_router.post("/add-new-cart-item", response_model=CartItemSchema)
@@ -55,6 +69,11 @@ def get_cart_item_by_id(cart_item_id: str) -> object:
 @cart_item_router.get("/get-all-cart-items", response_model=list[CartItemSchema])
 def get_all_cart_items() -> list[object]:
     return CartItemController.read_all()
+
+
+@cart_item_router.get("/get-all-cart-items-for-shopping-cart", response_model=list[CartItemSchema])
+def get_all_cart_items_for_shopping_cart(shopping_cart_id: str) -> list[object]:
+    return CartItemController.read_by_shopping_cart_id(shopping_cart_id)
 
 
 @cart_item_router.delete("/")

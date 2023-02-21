@@ -2,6 +2,7 @@ from sqlalchemy.exc import IntegrityError
 from app.users.services import CustomerService, UserService
 from fastapi import HTTPException, Response
 from app.users.exceptions import CustomerNotFoundError, UserNotFoundError
+from app.carts.services import ShoppingCartService
 
 
 class CustomerController:
@@ -12,6 +13,21 @@ class CustomerController:
         try:
             UserService.read_by_id(user_id)
             customer = CustomerService.create(name, surname, phone, address, city, country, postal_code, user_id)
+            return customer
+        except IntegrityError:
+            raise HTTPException(status_code=400, detail=f"User is already customer.")
+        except UserNotFoundError:
+            raise HTTPException(status_code=400, detail=f"You can not be customer if you are not user.")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def create_customer_with_shopping_cart(name: str, surname: str, phone: str, address: str, city: str, country: str,
+                                           postal_code: str, user_id: str) -> object:
+        try:
+            UserService.read_by_id(user_id)
+            customer = CustomerService.create(name, surname, phone, address, city, country, postal_code, user_id)
+            customer.cart = ShoppingCartService.create(customer.customer_id)
             return customer
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"User is already customer.")
@@ -35,6 +51,8 @@ class CustomerController:
         try:
             customers = CustomerService.read_all()
             return customers
+        except CustomerNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No customers in system.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -46,7 +64,7 @@ class CustomerController:
         except CustomerNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except IntegrityError:
-            raise HTTPException(status_code=400, detail="Can not create customer that has shopping orders and "
+            raise HTTPException(status_code=400, detail="Can not delete customer that has shopping orders and "
                                                         "shopping cart.")
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

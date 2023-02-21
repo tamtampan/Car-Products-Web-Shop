@@ -40,8 +40,13 @@ class ProductCategoryController:
 
     @staticmethod
     def read_all() -> list[object]:
-        product_categories = ProductCategoryService.read_all()
-        return product_categories
+        try:
+            product_categories = ProductCategoryService.read_all()
+            return product_categories
+        except ProductCategoryNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail="No product categories in system.")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     @staticmethod
     def delete_by_id(product_category_id: str) -> Response:

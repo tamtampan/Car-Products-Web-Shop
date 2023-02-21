@@ -34,7 +34,10 @@ class EmployeeService:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
-                return employee_repository.read_all()
+                employees = employee_repository.read_all()
+                if len(employees) == 0:
+                    raise EmployeeNotFoundError()
+                return employees
         except Exception as e:
             raise e
 

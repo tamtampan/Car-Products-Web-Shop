@@ -1,7 +1,9 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from app.offices.controller import OfficeController
 from app.offices.schemas import *
 from fastapi import Response
+from app.users.controller import JWTBearer
+# dependencies=[Depends(JWTBearer("super_user"))]
 
 office_router = APIRouter(tags=["Offices"], prefix="/api/offices")
 
