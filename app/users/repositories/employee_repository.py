@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
+
 from app.users.models import Employee
 
 
 class EmployeeRepository:
+    """Employee Repository"""
 
     def __init__(self, db: Session):
         self.db = db
@@ -42,8 +44,9 @@ class EmployeeRepository:
         except Exception as e:
             raise e
 
-    def update(self, employee_id: str, name: str = None, surname: str = None, phone: str = None,
-               job_title: str = None) -> object:
+    def update(
+        self, employee_id: str, name: str = None, surname: str = None, phone: str = None, job_title: str = None
+    ) -> object:
         try:
             employee = self.db.query(Employee).filter(Employee.employee_id == employee_id).first()
             if employee is None:

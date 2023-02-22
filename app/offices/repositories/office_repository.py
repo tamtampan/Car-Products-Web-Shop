@@ -1,14 +1,21 @@
+"""Office Repository"""
+
 from sqlalchemy.orm import Session
+
 from app.offices.models import Office
 
 
 class OfficeRepository:
+    """Office Repository"""
 
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, name: str, phone: str, address: str, city: str, country: str, postal_code: str,
-               territory: str) -> object:
+    def create(
+        self, name: str, phone: str, address: str, city: str, country: str, postal_code: str, territory: str
+    ) -> object:
+        """Create Office"""
+
         try:
             office = Office(name, phone, address, city, country, postal_code, territory)
             self.db.add(office)
@@ -19,6 +26,8 @@ class OfficeRepository:
             raise e
 
     def read_by_id(self, office_id: str) -> object:
+        """Read by id"""
+
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             return office
@@ -26,6 +35,8 @@ class OfficeRepository:
             raise e
 
     def read_all(self) -> list[object]:
+        """Read all"""
+
         try:
             offices = self.db.query(Office).all()
             return offices
@@ -33,6 +44,8 @@ class OfficeRepository:
             raise e
 
     def delete_by_id(self, office_id: str) -> bool or None:
+        """Delete by id"""
+
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             if office is None:
@@ -43,8 +56,19 @@ class OfficeRepository:
         except Exception as e:
             raise e
 
-    def update(self, office_id: str, name: str = None, phone: str = None, address: str = None, city: str = None,
-               country: str = None, postal_code: str = None, territory: str = None) -> object:
+    def update(
+        self,
+        office_id: str,
+        name: str = None,
+        phone: str = None,
+        address: str = None,
+        city: str = None,
+        country: str = None,
+        postal_code: str = None,
+        territory: str = None,
+    ) -> object:
+        """Update"""
+
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             if office is None:
@@ -71,6 +95,8 @@ class OfficeRepository:
             raise e
 
     def read_by_name(self, name: str) -> object:
+        """Read by name"""
+
         office = self.db.query(Office).filter(Office.name.ilike(f"{name}%")).first()
         if office is None:
             return None

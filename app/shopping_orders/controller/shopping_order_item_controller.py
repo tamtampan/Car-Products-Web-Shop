@@ -1,25 +1,49 @@
-from app.products.services import ProductService
-from app.shopping_orders.services import ShoppingOrderService, ShoppingOrderItemService
 from fastapi import HTTPException, Response
+
 from app.products.exceptions import ProductNotFoundError, ProductOutOfStockError
-from app.shopping_orders.exceptions import ShoppingOrderNotFoundError, ShoppingOrderItemNotFoundError
+from app.products.services import ProductService
+from app.shopping_orders.exceptions import ShoppingOrderItemNotFoundError, ShoppingOrderNotFoundError
+from app.shopping_orders.services import ShoppingOrderItemService, ShoppingOrderService
 
 
 class ShoppingOrderItemController:
+    """Shopping Order Item Controller"""
 
-    # prvo provera da li ima proizvoda na stanju, zatim create item order i onda azuriranje brojnog
-    # stanja proizvoda koje je smanjeno, a zatim azuriranje total_price u shopping order
     @staticmethod
     def create(quantity: int, product_id: str, shopping_order_id: str) -> object:
+        """
+        It creates a shopping order item, updates the quantity in stock for the product and updates the total price for
+        the shopping order
+        :param quantity: int
+        :type quantity: int
+        :param product_id: The id of the product to be added to the shopping order
+        :type product_id: str
+        :param shopping_order_id: The id of the shopping order that the item is being added to
+        :type shopping_order_id: str
+        :return: Shopping order item object
+        """
+
         try:
+            # checking if input valid
             ShoppingOrderService.read_by_id(shopping_order_id)
             product = ProductService.read_by_id(product_id)
+
+            # checking quantity in stock
             if product.quantity_in_stock < quantity:
                 raise HTTPException(status_code=ProductOutOfStockError().code, detail=ProductOutOfStockError().message)
+
+            # creating shopping order
             shopping_order_item = ShoppingOrderItemService.create(quantity, product_id, shopping_order_id)
+
+            # updating quantity in stock for product
             ProductService.update_quantity_in_stock(product_id, quantity, subtract=True)
+
+            # getting total cost of item
             item_price = product.price * quantity
+
+            # updating shopping order total cost
             ShoppingOrderService.update_total_price_for_amount(shopping_order_id, item_price)
+
             return shopping_order_item
         except ProductNotFoundError as e:
             raise HTTPException(status_code=400, detail=e.message)
@@ -60,6 +84,13 @@ class ShoppingOrderItemController:
 
     @staticmethod
     def read_items_by_shopping_order_id(shopping_order_id: str) -> list[object]:
+        """
+        It reads the shopping order items by shopping order id
+        :param shopping_order_id: str
+        :type shopping_order_id: str
+        :return: A list of shopping order items.
+        """
+
         try:
             ShoppingOrderService.read_by_id(shopping_order_id)
             shopping_order_items = ShoppingOrderItemService.read_items_by_shopping_order_id(shopping_order_id)

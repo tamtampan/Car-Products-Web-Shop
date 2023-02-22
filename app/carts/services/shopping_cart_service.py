@@ -1,13 +1,19 @@
+"""Shopping Cart Service"""
+
 from sqlalchemy.exc import IntegrityError
+
+from app.carts.exceptions import ShoppingCartNotFoundError, ShoppingCartTotalCostError
 from app.carts.repositories.shopping_cart_repository import ShoppingCartRepository
 from app.db.database import SessionLocal
-from app.carts.exceptions import ShoppingCartNotFoundError, ShoppingCartTotalCostError
 
 
 class ShoppingCartService:
+    """Shopping Cart Service"""
 
     @staticmethod
     def create(customer_id) -> object:
+        """Create Shopping Cart"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -19,6 +25,8 @@ class ShoppingCartService:
 
     @staticmethod
     def read_by_id(shopping_cart_id: str) -> object:
+        """Read by id"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -31,6 +39,8 @@ class ShoppingCartService:
 
     @staticmethod
     def read_by_customer_id(customer_id: str) -> object:
+        """Read by customer id"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -43,6 +53,8 @@ class ShoppingCartService:
 
     @staticmethod
     def read_all() -> list[object]:
+        """Read all"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -55,6 +67,8 @@ class ShoppingCartService:
 
     @staticmethod
     def delete_by_id(shopping_cart_id: str) -> bool:
+        """Delete by id"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -69,6 +83,8 @@ class ShoppingCartService:
 
     @staticmethod
     def update(shopping_cart_id: str, amount: float, subtract: bool = False) -> object:
+        """Update"""
+
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
@@ -83,6 +99,7 @@ class ShoppingCartService:
 
     @staticmethod
     def update_set_total_cost(shopping_cart_id: str, total_cost: float) -> object:
+        """Set total cost"""
         try:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)

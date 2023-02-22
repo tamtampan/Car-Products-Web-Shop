@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
+
 from app.shopping_orders.models import ShoppingOrderItem
 
 
 class ShoppingOrderItemRepository:
+    """Shopping Order Item Repository"""
 
     def __init__(self, db: Session):
         self.db = db
@@ -19,8 +21,11 @@ class ShoppingOrderItemRepository:
 
     def read_by_id(self, shopping_order_item_id: str) -> object:
         try:
-            shopping_order_item = self.db.query(ShoppingOrderItem).filter \
-                (ShoppingOrderItem.shopping_order_item_id == shopping_order_item_id).first()
+            shopping_order_item = (
+                self.db.query(ShoppingOrderItem)
+                .filter(ShoppingOrderItem.shopping_order_item_id == shopping_order_item_id)
+                .first()
+            )
             return shopping_order_item
         except Exception as e:
             raise e
@@ -34,8 +39,11 @@ class ShoppingOrderItemRepository:
 
     def delete_by_id(self, shopping_order_item_id: str) -> bool or None:
         try:
-            shopping_order_item = self.db.query(ShoppingOrderItem).filter \
-                (ShoppingOrderItem.shopping_order_item_id == shopping_order_item_id).first()
+            shopping_order_item = (
+                self.db.query(ShoppingOrderItem)
+                .filter(ShoppingOrderItem.shopping_order_item_id == shopping_order_item_id)
+                .first()
+            )
             if shopping_order_item is None:
                 return None
             self.db.delete(shopping_order_item)
@@ -46,8 +54,9 @@ class ShoppingOrderItemRepository:
 
     def read_items_by_shopping_order_id(self, shopping_order_id: str) -> list[object]:
         try:
-            shopping_order_items = self.db.query(ShoppingOrderItem).filter\
-                (ShoppingOrderItem.shopping_order_id == shopping_order_id).all()
+            shopping_order_items = (
+                self.db.query(ShoppingOrderItem).filter(ShoppingOrderItem.shopping_order_id == shopping_order_id).all()
+            )
             return shopping_order_items
         except Exception as e:
             raise e

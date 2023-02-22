@@ -1,11 +1,14 @@
 from uuid import uuid4
-from sqlalchemy import Column, String, ForeignKey
+
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
 
 class Employee(Base):
+    """Employee Model"""
+
     __tablename__ = "employee"
     employee_id = Column(String(100), primary_key=True, default=uuid4)
     name = Column(String(50), nullable=False)
@@ -14,9 +17,9 @@ class Employee(Base):
     job_title = Column(String(100), nullable=False)
 
     user_id = Column(String(100), ForeignKey("user.user_id"), nullable=False, unique=True)
-    user = relationship("User", lazy='subquery')
+    user = relationship("User", lazy="subquery")
     office_id = Column(String(100), ForeignKey("office.office_id"), nullable=False)
-    office = relationship("Office", lazy='subquery')
+    office = relationship("Office", lazy="subquery")
 
     def __init__(self, name, surname, phone, job_title, user_id, office_id):
         self.name = name

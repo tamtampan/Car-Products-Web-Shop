@@ -1,12 +1,18 @@
-from app.shopping_orders.repositories import ShoppingOrderRepository
-from sqlalchemy.exc import IntegrityError
-from app.shopping_orders.exceptions import ShoppingOrderNotFoundError, ShoppingOrderTotalPriceSubtractionError, \
-    DateNotValid
-from app.db.database import SessionLocal
 from datetime import datetime
+
+from sqlalchemy.exc import IntegrityError
+
+from app.db.database import SessionLocal
+from app.shopping_orders.exceptions import (
+    DateNotValid,
+    ShoppingOrderNotFoundError,
+    ShoppingOrderTotalPriceSubtractionError,
+)
+from app.shopping_orders.repositories import ShoppingOrderRepository
 
 
 class ShoppingOrderService:
+    """Shopping Order Service"""
 
     @staticmethod
     def valid_date(date_str: str) -> bool:
@@ -19,8 +25,15 @@ class ShoppingOrderService:
             return True
 
     @staticmethod
-    def create(total_price: float, shipping_cost: float, status: int, order_date: str, shipped_date: str or None,
-               customer_id: str, office_id: str) -> object:
+    def create(
+        total_price: float,
+        shipping_cost: float,
+        status: int,
+        order_date: str,
+        shipped_date: str or None,
+        customer_id: str,
+        office_id: str,
+    ) -> object:
         try:
             if ShoppingOrderService.valid_date(order_date):
                 if shipped_date is not None:
@@ -33,8 +46,9 @@ class ShoppingOrderService:
                 raise DateNotValid("Order date not valid. Should be after 2020-01-01 and before 2030-01-01.")
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
-                return shopping_order_repository.create(total_price, shipping_cost, status, order_date, shipped_date,
-                                                        customer_id, office_id)
+                return shopping_order_repository.create(
+                    total_price, shipping_cost, status, order_date, shipped_date, customer_id, office_id
+                )
         except Exception as e:
             raise e
 
@@ -77,8 +91,9 @@ class ShoppingOrderService:
             raise e
 
     @staticmethod
-    def update(shopping_order_id: str, shipping_cost: float = None, status: int = None,
-               shipped_date: str = None) -> object:
+    def update(
+        shopping_order_id: str, shipping_cost: float = None, status: int = None, shipped_date: str = None
+    ) -> object:
         try:
             if shipped_date is not None:
                 if not ShoppingOrderService.valid_date(shipped_date):
@@ -89,11 +104,13 @@ class ShoppingOrderService:
                     old_shopping_order = shopping_order_repository.read_by_id(shopping_order_id)
                     if old_shopping_order is None:
                         raise ShoppingOrderNotFoundError()
-                    if datetime.strptime(str(old_shopping_order.order_date), "%Y-%m-%d") > \
-                            datetime.strptime(shipped_date, "%Y-%m-%d"):
+                    if datetime.strptime(str(old_shopping_order.order_date), "%Y-%m-%d") > datetime.strptime(
+                        shipped_date, "%Y-%m-%d"
+                    ):
                         raise DateNotValid("Shipped date can not be before order date.")
-                shopping_order = shopping_order_repository.update \
-                    (shopping_order_id, shipping_cost, status, shipped_date)
+                shopping_order = shopping_order_repository.update(
+                    shopping_order_id, shipping_cost, status, shipped_date
+                )
                 return shopping_order
         except ValueError as e:
             raise e
@@ -142,8 +159,9 @@ class ShoppingOrderService:
         try:
             with SessionLocal() as db:
                 shopping_order_repository = ShoppingOrderRepository(db)
-                shopping_order = shopping_order_repository.update_total_price_for_amount \
-                    (shopping_order_id, amount, subtract)
+                shopping_order = shopping_order_repository.update_total_price_for_amount(
+                    shopping_order_id, amount, subtract
+                )
                 if shopping_order is False:
                     raise ShoppingOrderTotalPriceSubtractionError()
                 if shopping_order is None:

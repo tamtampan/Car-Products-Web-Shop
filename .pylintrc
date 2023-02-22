@@ -1,0 +1,12 @@
+
+[MASTER]
+init-hook=
+    import sys
+    sys.path.append("C:\Program Files\Python310\Lib\site-packages")
+    try: import pylint_venv
+    except ImportError: pass
+    else: pylint_venv.inithook(force_venv_activation=True)
+[BASIC]
+good-names = db
+[DESIGN]
+min-public-methods=0

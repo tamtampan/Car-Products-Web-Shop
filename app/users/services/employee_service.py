@@ -1,10 +1,12 @@
-from app.users.repositories.employee_repository import EmployeeRepository
+from sqlalchemy.exc import IntegrityError
+
 from app.db.database import SessionLocal
 from app.users.exceptions import EmployeeNotFoundError
-from sqlalchemy.exc import IntegrityError
+from app.users.repositories.employee_repository import EmployeeRepository
 
 
 class EmployeeService:
+    """Employee Service"""
 
     @staticmethod
     def create(name: str, surname: str, phone: str, job_title: str, user_id: str, office_id: str) -> object:
@@ -54,8 +56,9 @@ class EmployeeService:
             raise e
 
     @staticmethod
-    def update(employee_id: str, name: str = None, surname: str = None, phone: str = None,
-               job_title: str = None) -> object:
+    def update(
+        employee_id: str, name: str = None, surname: str = None, phone: str = None, job_title: str = None
+    ) -> object:
         try:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)

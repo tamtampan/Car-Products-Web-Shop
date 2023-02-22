@@ -1,9 +1,15 @@
+"""Office Model Module"""
+
 from uuid import uuid4
+
 from sqlalchemy import Column, String
+
 from app.db import Base
 
 
 class Office(Base):
+    """Office Model"""
+
     __tablename__ = "office"
     office_id = Column(String(100), primary_key=True, default=uuid4)
     name = Column(String(50), nullable=False, unique=True)

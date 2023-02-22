@@ -1,14 +1,17 @@
 from sqlalchemy.orm import Session
+
 from app.users.models import Customer
 
 
 class CustomerRepository:
+    """Customer Repository"""
 
     def __init__(self, db: Session):
         self.db = db
 
-    def create(self, name: str, surname: str, phone: str, address: str, city: str, country: str, postal_code: str,
-               user_id: str) -> object:
+    def create(
+        self, name: str, surname: str, phone: str, address: str, city: str, country: str, postal_code: str, user_id: str
+    ) -> object:
         try:
             customer = Customer(name, surname, phone, address, city, country, postal_code, user_id)
             self.db.add(customer)
@@ -43,8 +46,17 @@ class CustomerRepository:
         except Exception as e:
             raise e
 
-    def update(self, customer_id: str, name: str = None, surname: str = None, phone: str = None, address: str = None,
-               city: str = None, country: str = None, postal_code: str = None) -> object:
+    def update(
+        self,
+        customer_id: str,
+        name: str = None,
+        surname: str = None,
+        phone: str = None,
+        address: str = None,
+        city: str = None,
+        country: str = None,
+        postal_code: str = None,
+    ) -> object:
         try:
             customer = self.db.query(Customer).filter(Customer.customer_id == customer_id).first()
             if customer is None:

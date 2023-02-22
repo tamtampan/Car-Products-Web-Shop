@@ -1,4 +1,4 @@
-from pydantic import ValidationError
+"""Cart Item Service"""
 
 from app.carts.exceptions import CartItemNotFoundError, QuantityNotValid
 from app.carts.repositories.cart_item_repository import CartItemRepository
@@ -6,9 +6,12 @@ from app.db.database import SessionLocal
 
 
 class CartItemService:
+    """Cart Item Service"""
 
     @staticmethod
     def create(quantity: int, shopping_cart_id: str, product_id: str) -> object:
+        """Create Cart Item"""
+
         try:
             if quantity < 1 or quantity > 20:
                 raise QuantityNotValid()
@@ -20,6 +23,8 @@ class CartItemService:
 
     @staticmethod
     def read_by_id(cart_item_id: str) -> object:
+        """Read by id"""
+
         try:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
@@ -32,6 +37,8 @@ class CartItemService:
 
     @staticmethod
     def read_all() -> list[object]:
+        """Read all"""
+
         try:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
@@ -44,6 +51,8 @@ class CartItemService:
 
     @staticmethod
     def read_by_shopping_cart_id(shopping_cart_id: str) -> list[object]:
+        """Read by shopping cart id"""
+
         try:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
@@ -56,6 +65,8 @@ class CartItemService:
 
     @staticmethod
     def delete_by_id(cart_item_id: str) -> bool:
+        """Delete by id"""
+
         try:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
@@ -68,6 +79,8 @@ class CartItemService:
 
     @staticmethod
     def update_quantity(cart_item_id: str, quantity: int) -> object:
+        """Update quantity"""
+
         try:
             if quantity < 1 or quantity > 20:
                 raise QuantityNotValid()
