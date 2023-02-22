@@ -1,5 +1,4 @@
 from sqlalchemy.orm import Session
-
 from app.shopping_orders.models import ShoppingOrderItem
 
 

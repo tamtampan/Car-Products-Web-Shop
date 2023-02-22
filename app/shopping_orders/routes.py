@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response
 
+from app.products.schemas import ProductSchema, ProductSchemaCount
 from app.shopping_orders.controller import ShoppingOrderController, ShoppingOrderItemController
 from app.shopping_orders.schemas import *
 from app.users.controller import JWTBearer

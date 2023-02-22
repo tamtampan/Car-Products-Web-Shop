@@ -1,8 +1,9 @@
 """Product Repository"""
-
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.products.models import Product
+from app.shopping_orders.models import ShoppingOrderItem
 
 
 class ProductRepository:
@@ -152,3 +153,19 @@ class ProductRepository:
             return product
         except Exception as e:
             raise e
+
+    def read_products_by_descending_number_of_sold(self) -> list[object]:
+        try:
+            products = []
+            result = (
+                self.db.query(Product, func.count(ShoppingOrderItem.shopping_order_item_id))
+                .join(Product)
+                .group_by(ShoppingOrderItem.product_id)
+            )
+            for row in result:
+                product = row[0]
+                product.number_sold = row[1]
+                products.append(product)
+            return products
+        except Exception as exc:
+            raise exc

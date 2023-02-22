@@ -194,3 +194,16 @@ class ProductService:
                 return product
         except Exception as e:
             raise e
+
+    @staticmethod
+    def read_products_by_descending_number_of_sold() -> list[object]:
+        try:
+            with SessionLocal() as db:
+                product_repository = ProductRepository(db)
+                products = product_repository.read_products_by_descending_number_of_sold()
+                if len(products) == 0:
+                    raise ProductNotFoundError("There is no sold products.")
+                products.sort(key=lambda product: product.number_sold, reverse=True)
+                return products
+        except Exception as e:
+            raise e
