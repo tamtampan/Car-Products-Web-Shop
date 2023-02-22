@@ -60,3 +60,21 @@ class ProductSchemaUpdateQuantity(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class ProductSchemaCount(BaseModel):
+    """Product Schema"""
+
+    product_id: UUID4
+    name: str
+    description: str
+    code: str
+    price: PositiveFloat
+    for_car_brand: Optional[str]
+    quantity_in_stock: int
+    producer_id: str
+    product_category_id: str
+    number_sold: int
+
+    class Config:
+        orm_mode = True

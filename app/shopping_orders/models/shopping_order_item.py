@@ -7,7 +7,7 @@ from app.db import Base
 
 
 class ShoppingOrderItem(Base):
-    """Shopping Order Item"""
+    """Shopping Order Item Model"""
 
     __tablename__ = "shopping_order_item"
     shopping_order_item_id = Column(String(100), primary_key=True, default=uuid4)

@@ -197,3 +197,8 @@ def get_products_name_like(name: str) -> list[object]:
 def get_by_code(code: str) -> object:
     """Get by code"""
     return ProductController.read_by_code(code)
+
+
+@product_router.get("/get-products-by-descending_number-of-sold", response_model=list[ProductSchemaCount])
+def get_products_by_descending_number_of_sold() -> list[object]:
+    return ProductController.read_products_by_descending_number_of_sold()

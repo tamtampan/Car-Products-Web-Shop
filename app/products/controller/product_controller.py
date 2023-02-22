@@ -201,3 +201,13 @@ class ProductController:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
+
+    @staticmethod
+    def read_products_by_descending_number_of_sold() -> list[object]:
+        try:
+            products = ProductService.read_products_by_descending_number_of_sold()
+            return products
+        except ProductNotFoundError as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
