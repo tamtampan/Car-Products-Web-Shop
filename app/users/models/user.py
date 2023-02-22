@@ -1,9 +1,13 @@
 from uuid import uuid4
-from sqlalchemy import Column, String, Boolean
+
+from sqlalchemy import Boolean, Column, String
+
 from app.db import Base
 
 
 class User(Base):
+    """User Model"""
+
     __tablename__ = "user"
     user_id = Column(String(100), primary_key=True, default=uuid4)
     email = Column(String(100), unique=True, nullable=False)

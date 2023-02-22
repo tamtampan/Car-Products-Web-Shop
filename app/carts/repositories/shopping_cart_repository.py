@@ -1,13 +1,19 @@
+"""Shopping Cart Repository"""
+
 from sqlalchemy.orm import Session
+
 from app.carts.models import ShoppingCart
 
 
 class ShoppingCartRepository:
+    """Shopping Cart Repository"""
 
     def __init__(self, db: Session):
         self.db = db
 
     def create(self, customer_id: str) -> object:
+        """Create Shopping Cart"""
+
         try:
             shopping_cart = ShoppingCart(customer_id)
             self.db.add(shopping_cart)
@@ -18,14 +24,19 @@ class ShoppingCartRepository:
             raise e
 
     def read_by_id(self, shopping_cart_id: str) -> object:
+        """Read by id"""
+
         try:
-            shopping_cart = self.db.query(ShoppingCart).filter\
-                (ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            shopping_cart = (
+                self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            )
             return shopping_cart
         except Exception as e:
             raise e
 
     def read_by_customer_id(self, customer_id: str) -> object:
+        """Read by Customer id"""
+
         try:
             shopping_cart = self.db.query(ShoppingCart).filter(ShoppingCart.customer_id == customer_id).first()
             return shopping_cart
@@ -33,6 +44,8 @@ class ShoppingCartRepository:
             raise e
 
     def read_all(self) -> list[object]:
+        """Read all"""
+
         try:
             shopping_carts = self.db.query(ShoppingCart).all()
             return shopping_carts
@@ -40,9 +53,12 @@ class ShoppingCartRepository:
             raise e
 
     def delete_by_id(self, shopping_cart_id: str) -> bool or None:
+        """Delete by id"""
+
         try:
-            shopping_cart = \
+            shopping_cart = (
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            )
             if shopping_cart is None:
                 return None
             self.db.delete(shopping_cart)
@@ -52,9 +68,12 @@ class ShoppingCartRepository:
             raise e
 
     def update(self, shopping_cart_id: str, amount: float, subtract: bool = False) -> object:
+        """Update"""
+
         try:
-            shopping_cart = \
+            shopping_cart = (
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            )
             if shopping_cart is None:
                 return None
             if subtract:
@@ -70,9 +89,12 @@ class ShoppingCartRepository:
             raise e
 
     def update_set_total_cost(self, shopping_cart_id: str, total_cost: float) -> object:
+        """Update total cost"""
+
         try:
-            shopping_cart = \
+            shopping_cart = (
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
+            )
             if shopping_cart is None:
                 return None
             shopping_cart.total_cost = total_cost

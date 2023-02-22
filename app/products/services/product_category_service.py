@@ -1,10 +1,12 @@
-from app.products.repositories.product_category_repository import ProductCategoryRepository
+from sqlalchemy.exc import IntegrityError
+
 from app.db.database import SessionLocal
 from app.products.exceptions import ProductCategoryNotFoundError
-from sqlalchemy.exc import IntegrityError
+from app.products.repositories.product_category_repository import ProductCategoryRepository
 
 
 class ProductCategoryService:
+    """Product Category Service"""
 
     @staticmethod
     def create(name: str) -> object:

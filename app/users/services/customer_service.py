@@ -1,14 +1,17 @@
-from app.users.repositories.customer_repository import CustomerRepository
+from sqlalchemy.exc import IntegrityError
+
 from app.db.database import SessionLocal
 from app.users.exceptions import CustomerNotFoundError
-from sqlalchemy.exc import IntegrityError
+from app.users.repositories.customer_repository import CustomerRepository
 
 
 class CustomerService:
+    """Customer Service"""
 
     @staticmethod
-    def create(name: str, surname: str, phone: str, address: str, city: str, country: str, postal_code: str,
-               user_id: str) -> object:
+    def create(
+        name: str, surname: str, phone: str, address: str, city: str, country: str, postal_code: str, user_id: str
+    ) -> object:
         try:
             with SessionLocal() as db:
                 customer_repository = CustomerRepository(db)
@@ -57,13 +60,22 @@ class CustomerService:
             raise e
 
     @staticmethod
-    def update(customer_id: str, name: str = None, surname: str = None, phone: str = None, address: str = None,
-               city: str = None, country: str = None, postal_code: str = None) -> object:
+    def update(
+        customer_id: str,
+        name: str = None,
+        surname: str = None,
+        phone: str = None,
+        address: str = None,
+        city: str = None,
+        country: str = None,
+        postal_code: str = None,
+    ) -> object:
         try:
             with SessionLocal() as db:
                 customer_repository = CustomerRepository(db)
-                customer = customer_repository.update(customer_id, name, surname, phone,
-                                                      address, city, country, postal_code)
+                customer = customer_repository.update(
+                    customer_id, name, surname, phone, address, city, country, postal_code
+                )
                 if customer is None:
                     raise CustomerNotFoundError()
                 return customer

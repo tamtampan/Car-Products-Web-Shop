@@ -1,8 +1,9 @@
-from pydantic import BaseModel
-from pydantic import UUID4, EmailStr
+from pydantic import UUID4, BaseModel, EmailStr
 
 
 class UserSchema(BaseModel):
+    """User Schema"""
+
     user_id: UUID4
     email: str
     password: str
@@ -14,6 +15,28 @@ class UserSchema(BaseModel):
 
 
 class UserSchemaIn(BaseModel):
+    """User Schema In"""
+
+    email: EmailStr
+    password: str
+
+    class Config:
+        orm_mode = True
+
+
+class UserSchemaUpdateActive(BaseModel):
+    """User Schema Update Active"""
+
+    user_id: str
+    active: bool
+
+    class Config:
+        orm_mode = True
+
+
+class UserSchemaUpdatePassword(BaseModel):
+    """User Schema Update Password"""
+
     email: EmailStr
     password: str
 

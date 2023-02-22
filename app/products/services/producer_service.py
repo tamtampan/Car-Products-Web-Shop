@@ -1,10 +1,12 @@
-from app.products.repositories.producer_repository import ProducerRepository
 from sqlalchemy.exc import IntegrityError
+
 from app.db.database import SessionLocal
 from app.products.exceptions import ProducerNotFoundError
+from app.products.repositories.producer_repository import ProducerRepository
 
 
 class ProducerService:
+    """Producer Service"""
 
     @staticmethod
     def create(name: str, address: str, description: str) -> object:
@@ -72,7 +74,9 @@ class ProducerService:
         try:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
-                producer = producer_repository.update(producer_id, name, address, description)
+                producer = producer_repository.update(
+                    producer_id=producer_id, name=name, address=address, description=description
+                )
                 if producer is None:
                     raise ProducerNotFoundError()
                 return producer

@@ -1,11 +1,14 @@
 from uuid import uuid4
-from sqlalchemy import Column, String, ForeignKey
+
+from sqlalchemy import Column, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from app.db.database import Base
 
 
 class Customer(Base):
+    """Customer Model"""
+
     __tablename__ = "customer"
     customer_id = Column(String(100), primary_key=True, default=uuid4)
     name = Column(String(50), nullable=False)
@@ -17,7 +20,7 @@ class Customer(Base):
     postal_code = Column(String(50), nullable=False)
 
     user_id = Column(String(100), ForeignKey("user.user_id"), nullable=False, unique=True)
-    user = relationship("User", lazy='subquery')
+    user = relationship("User", lazy="subquery")
 
     def __init__(self, name, surname, phone, address, city, country, postal_code, user_id):
         self.name = name

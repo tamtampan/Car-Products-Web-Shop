@@ -1,16 +1,14 @@
-import codecs
 import hashlib
 
-from app.config import settings
-from app.users.repositories.user_repository import UserRepository
-from app.db.database import SessionLocal
-from app.users.exceptions import UserInvalidPassword, UserPasswordLenError
-
-from app.users.exceptions import UserNotFoundError
 from sqlalchemy.exc import IntegrityError
+
+from app.db.database import SessionLocal
+from app.users.exceptions import UserInvalidPassword, UserNotFoundError, UserPasswordLenError
+from app.users.repositories.user_repository import UserRepository
 
 
 class UserService:
+    """User Service"""
 
     @staticmethod
     def create_user(email: str, password: str) -> object:

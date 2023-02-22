@@ -1,13 +1,28 @@
-from app.products.services import ProducerService
+"""Producer Controller Module"""
+
 from fastapi import HTTPException, Response
 from sqlalchemy.exc import IntegrityError
-from app.products.exceptions import *
+
+from app.products.exceptions import ProducerNotFoundError
+from app.products.services import ProducerService
 
 
 class ProducerController:
+    """Producer Controller"""
 
     @staticmethod
     def create(name: str, address: str, description: str) -> object:
+        """
+        It creates a producer.
+
+        :param name: str - the name of the producer
+        :type name: str
+        :param address: str - the address of the producer
+        :type address: str
+        :param description: str - The description of the producer
+        :type description: str
+        :return: The producer object is being returned.
+        """
         try:
             producer = ProducerService.create(name, address, description)
             return producer
@@ -18,6 +33,8 @@ class ProducerController:
 
     @staticmethod
     def read_by_id(producer_id: str) -> object:
+        """Read by id"""
+
         try:
             producer = ProducerService.read_by_id(producer_id)
             return producer
@@ -28,6 +45,8 @@ class ProducerController:
 
     @staticmethod
     def read_by_name(name: str) -> object:
+        """Read by name"""
+
         try:
             producer = ProducerService.read_by_name(name)
             return producer
@@ -38,6 +57,8 @@ class ProducerController:
 
     @staticmethod
     def read_all() -> list[object]:
+        """Read all"""
+
         try:
             producers = ProducerService.read_all()
             return producers
@@ -48,6 +69,8 @@ class ProducerController:
 
     @staticmethod
     def delete_by_id(producer_id: str) -> Response:
+        """Delete by id"""
+
         try:
             ProducerService.delete_by_id(producer_id)
             return Response(content=f"Producer with id - {producer_id} is deleted")
@@ -60,8 +83,12 @@ class ProducerController:
 
     @staticmethod
     def update(producer_id: str, name: str = None, address: str = None, description: str = None) -> object:
+        """Update"""
+
         try:
-            producer = ProducerService.update(producer_id, name, address, description)
+            producer = ProducerService.update(
+                producer_id=producer_id, name=name, address=address, description=description
+            )
             return producer
         except ProducerNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
