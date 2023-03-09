@@ -20,10 +20,10 @@ class OfficeService:
             with SessionLocal() as db:
                 office_repository = OfficeRepository(db)
                 return office_repository.create(name, phone, address, city, country, postal_code, territory)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(office_id: str) -> object:
@@ -36,8 +36,8 @@ class OfficeService:
                 if office is None:
                     raise OfficeNotFoundError()
                 return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -50,8 +50,8 @@ class OfficeService:
                 if len(offices) == 0:
                     raise OfficeNotFoundError()
                 return offices
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(office_id: str) -> bool:
@@ -64,10 +64,10 @@ class OfficeService:
                 if office_deleted is None:
                     raise OfficeNotFoundError()
                 return office_deleted
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(
@@ -91,8 +91,8 @@ class OfficeService:
                 if office is None:
                     raise OfficeNotFoundError()
                 return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -105,5 +105,5 @@ class OfficeService:
                 if office is None:
                     raise OfficeNotFoundError()
                 return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

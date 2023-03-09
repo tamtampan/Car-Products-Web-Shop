@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.offices.exceptions import OfficeNotFoundError
 from app.offices.services import OfficeService
+from starlette.responses import JSONResponse
 
 
 class OfficeController:
@@ -21,8 +22,8 @@ class OfficeController:
             return office
         except IntegrityError:
             raise HTTPException(status_code=400, detail="Office with provided name already exists.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_id(office_id: str) -> object:
@@ -31,10 +32,10 @@ class OfficeController:
         try:
             office = OfficeService.read_by_id(office_id)
             return office
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_all() -> list[object]:
@@ -43,10 +44,10 @@ class OfficeController:
         try:
             offices = OfficeService.read_all()
             return offices
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No offices in system.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No offices in system.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def delete_by_id(office_id: str) -> Response:
@@ -54,16 +55,16 @@ class OfficeController:
 
         try:
             OfficeService.delete_by_id(office_id)
-            return Response(content=f"Office with id - {office_id} is deleted.")
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+            return JSONResponse(content=f"Office with id - {office_id} is deleted.")
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(
                 status_code=400,
                 detail="First you have to delete all employees and shopping orders " "from this office.",
             )
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update(
@@ -81,10 +82,10 @@ class OfficeController:
         try:
             office = OfficeService.update(office_id, name, phone, address, city, country, postal_code, territory)
             return office
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -93,7 +94,7 @@ class OfficeController:
         try:
             office = OfficeService.read_by_name(name)
             return office
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))

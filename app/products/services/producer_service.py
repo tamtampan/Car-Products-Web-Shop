@@ -14,10 +14,10 @@ class ProducerService:
             with SessionLocal() as db:
                 producer_repository = ProducerRepository(db)
                 return producer_repository.create(name, address, description)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(producer_id: str) -> object:
@@ -28,8 +28,8 @@ class ProducerService:
                 if producer is None:
                     raise ProducerNotFoundError()
                 return producer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -40,8 +40,8 @@ class ProducerService:
                 if producer is None:
                     raise ProducerNotFoundError()
                 return producer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -52,8 +52,8 @@ class ProducerService:
                 if len(producers) == 0:
                     raise ProducerNotFoundError()
                 return producers
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(producer_id: str) -> bool:
@@ -64,10 +64,10 @@ class ProducerService:
                 if producer is None:
                     raise ProducerNotFoundError()
                 return producer
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(producer_id: str, name: str = None, address: str = None, description: str = None) -> object:
@@ -80,5 +80,5 @@ class ProducerService:
                 if producer is None:
                     raise ProducerNotFoundError()
                 return producer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

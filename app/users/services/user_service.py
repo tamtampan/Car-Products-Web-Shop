@@ -19,10 +19,10 @@ class UserService:
                 user_repository = UserRepository(db)
                 hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
                 return user_repository.create_user(email, hashed_password)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def create_superuser(email: str, password: str) -> object:
@@ -33,10 +33,10 @@ class UserService:
                 user_repository = UserRepository(db)
                 hashed_password = hashlib.sha256(bytes(password, "utf-8")).hexdigest()
                 return user_repository.create_superuser(email, hashed_password)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def login_user(email: str, password: str) -> object:
@@ -47,8 +47,8 @@ class UserService:
                 if hashlib.sha256(bytes(password, "utf-8")).hexdigest() != user.password:
                     raise UserInvalidPassword(message="Invalid password for this user.", code=401)
                 return user
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(user_id: str) -> object:
@@ -59,8 +59,8 @@ class UserService:
                 if user is None:
                     raise UserNotFoundError()
                 return user
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_email(email: str) -> object:
@@ -71,8 +71,8 @@ class UserService:
                 if user is None:
                     raise UserNotFoundError()
                 return user
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -83,8 +83,8 @@ class UserService:
                 if len(users) == 0:
                     raise UserNotFoundError()
                 return users
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(user_id: str) -> bool:
@@ -95,10 +95,27 @@ class UserService:
                 if user is None:
                     raise UserNotFoundError()
                 return user
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
+
+    @staticmethod
+    def delete_by_email(email: str, password: str) -> bool:
+        try:
+            with SessionLocal() as db:
+                user_repository = UserRepository(db)
+                user = user_repository.read_by_email(email)
+                if user is None:
+                    raise UserNotFoundError()
+                if hashlib.sha256(bytes(password, "utf-8")).hexdigest() != user.password:
+                    raise UserInvalidPassword(message="Invalid password for this user.", code=401)
+                user = user_repository.delete_by_email(email)
+                return user
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_active(user_id: str, active: bool) -> object:
@@ -109,8 +126,8 @@ class UserService:
                 if user is None:
                     raise UserNotFoundError()
                 return user
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_password(email: str, password: str) -> object:
@@ -123,5 +140,5 @@ class UserService:
                 if user is None:
                     raise UserNotFoundError()
                 return user
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

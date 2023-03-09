@@ -2,6 +2,7 @@ from typing import Dict
 
 from fastapi import HTTPException, Response
 from sqlalchemy.exc import IntegrityError
+from starlette.responses import JSONResponse
 
 from app.users.exceptions import UserInvalidPassword, UserNotFoundError, UserPasswordLenError
 from app.users.services import UserService, signJWT
@@ -23,12 +24,12 @@ class UserController:
         try:
             user = UserService.create_user(email, password)
             return user
-        except UserPasswordLenError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+        except UserPasswordLenError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"User with provided email - {email} already exists.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def create_superuser(email, password) -> object:
@@ -41,12 +42,12 @@ class UserController:
         try:
             user = UserService.create_superuser(email, password)
             return user
-        except UserPasswordLenError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+        except UserPasswordLenError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"User with provided email - {email} already exists.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def login_user(email, password) -> Dict[str, str]:
@@ -56,12 +57,12 @@ class UserController:
             if user.superuser:
                 return signJWT(user.user_id, "super_user")
             return signJWT(user.user_id, "classic_user")
-        except UserInvalidPassword as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserInvalidPassword as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_id(user_id: str) -> object:
@@ -70,10 +71,10 @@ class UserController:
         try:
             user = UserService.read_by_id(user_id)
             return user
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_email(email: str) -> object:
@@ -82,10 +83,10 @@ class UserController:
         try:
             user = UserService.read_by_email(email)
             return user
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_all() -> list[object]:
@@ -94,10 +95,10 @@ class UserController:
         try:
             users = UserService.read_all()
             return users
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No users in system.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No users in system.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def delete_by_id(user_id: str) -> Response:
@@ -105,13 +106,29 @@ class UserController:
 
         try:
             UserService.delete_by_id(user_id)
-            return Response(status_code=200, content=f"User with id - {user_id} deleted.")
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+            return JSONResponse(status_code=200, content=f"User with id - {user_id} deleted.")
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(status_code=400, detail="Can not delete user before deleting customer (or employee).")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
+
+    @staticmethod
+    def delete_by_email(email: str, password: str) -> Response:
+        """It deletes a user by email and password."""
+
+        try:
+            UserService.delete_by_email(email, password)
+            return JSONResponse(status_code=200, content=f"User with email - {email} deleted.")
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except UserInvalidPassword as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except IntegrityError:
+            raise HTTPException(status_code=400, detail="Can not delete user before deleting customer (or employee).")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update_active(user_id: str, active: bool) -> object:
@@ -120,10 +137,10 @@ class UserController:
         try:
             user = UserService.update_active(user_id, active)
             return user
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update_password(email: str, password: str) -> object:
@@ -132,9 +149,9 @@ class UserController:
         try:
             user = UserService.update_password(email, password)
             return user
-        except UserPasswordLenError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except UserNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except UserPasswordLenError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except UserNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))

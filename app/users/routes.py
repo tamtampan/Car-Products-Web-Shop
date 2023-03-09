@@ -33,7 +33,7 @@ def get_by_email(email: str) -> object:
     return UserController.read_by_email(email)
 
 
-@user_router.get("/get-all-users", response_model=list[UserSchema], dependencies=[Depends(JWTBearer("super_user"))])
+@user_router.get("/get-all-users", response_model=list[UserSchema])
 def get_all_users() -> list[object]:
     return UserController.read_all()
 
@@ -41,6 +41,11 @@ def get_all_users() -> list[object]:
 @user_router.delete("/", dependencies=[Depends(JWTBearer("super_user"))])
 def delete_user_by_id(user_id: str) -> Response:
     return UserController.delete_by_id(user_id)
+
+
+@user_router.delete("/by-email-and-password")
+def delete_user_by_email(email: str, password: str) -> Response:
+    return UserController.delete_by_email(email, password)
 
 
 @user_router.put("/update/active", response_model=UserSchema)

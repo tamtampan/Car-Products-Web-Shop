@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import HTTPException, Response
 from sqlalchemy.exc import IntegrityError
+from starlette.responses import JSONResponse
 
 from app.carts.exceptions import CartItemNotFoundError, ShoppingCartNotFoundError
 from app.carts.services import CartItemService, ShoppingCartService
@@ -94,7 +95,7 @@ class ShoppingOrderController:
     def delete_by_id(shopping_order_id: str) -> Response:
         try:
             ShoppingOrderService.delete_by_id(shopping_order_id)
-            return Response(status_code=200, content=f"Shopping order with id - {shopping_order_id} deleted.")
+            return JSONResponse(status_code=200, content=f"Shopping order with id - {shopping_order_id} deleted.")
         except ShoppingOrderNotFoundError as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except IntegrityError:
@@ -133,12 +134,12 @@ class ShoppingOrderController:
             shopping_order = ShoppingOrderService.read_by_id(shopping_order_id)
             shopping_order.items = ShoppingOrderItemService.read_items_by_shopping_order_id(shopping_order_id)
             return shopping_order
-        except ShoppingOrderNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except ShoppingOrderItemNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No items in this shopping order.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ShoppingOrderNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except ShoppingOrderItemNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No items in this shopping order.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_today_shopping_orders() -> list[object]:
@@ -150,10 +151,10 @@ class ShoppingOrderController:
         try:
             shopping_orders = ShoppingOrderService.read_today_shopping_orders()
             return shopping_orders
-        except ShoppingOrderNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No shopping orders for today.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ShoppingOrderNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No shopping orders for today.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def sum_today_profit() -> Response:
@@ -165,8 +166,8 @@ class ShoppingOrderController:
         try:
             profit = ShoppingOrderService.sum_today_profit()
             return Response(status_code=200, content=f"Profit for today is {profit} dinars.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update_total_price_for_amount(shopping_order_id: str, amount: float, subtract: bool = False) -> object:
@@ -184,12 +185,12 @@ class ShoppingOrderController:
         try:
             shopping_order = ShoppingOrderService.update_total_price_for_amount(shopping_order_id, amount, subtract)
             return shopping_order
-        except ShoppingOrderTotalPriceSubtractionError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except ShoppingOrderNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ShoppingOrderTotalPriceSubtractionError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except ShoppingOrderNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def make_order(customer_id: str, office_id: str) -> object:
@@ -257,15 +258,15 @@ class ShoppingOrderController:
 
             return shopping_order
 
-        except OfficeNotFoundError as e:
-            raise HTTPException(status_code=400, detail=e.message)
-        except CartItemNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No cart items in this customer shopping cart.")
-        except ShoppingCartNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except CustomerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except ProductNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except OfficeNotFoundError as exc:
+            raise HTTPException(status_code=400, detail=exc.message)
+        except CartItemNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No cart items in this customer shopping cart.")
+        except ShoppingCartNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except CustomerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except ProductNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))

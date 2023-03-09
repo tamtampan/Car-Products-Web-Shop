@@ -16,22 +16,22 @@ class EmployeeRepository:
             self.db.commit()
             self.db.refresh(employee)
             return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, employee_id: str) -> object:
         try:
             employee = self.db.query(Employee).filter(Employee.employee_id == employee_id).first()
             return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         try:
             employees = self.db.query(Employee).all()
             return employees
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, employee_id: str) -> bool or None:
         try:
@@ -41,8 +41,8 @@ class EmployeeRepository:
             self.db.delete(employee)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(
         self, employee_id: str, name: str = None, surname: str = None, phone: str = None, job_title: str = None
@@ -63,5 +63,5 @@ class EmployeeRepository:
             self.db.commit()
             self.db.refresh(employee)
             return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

@@ -18,22 +18,22 @@ class CustomerRepository:
             self.db.commit()
             self.db.refresh(customer)
             return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, customer_id: str) -> object:
         try:
             customer = self.db.query(Customer).filter(Customer.customer_id == customer_id).first()
             return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         try:
             customers = self.db.query(Customer).all()
             return customers
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, customer_id: str) -> bool or None:
         try:
@@ -43,8 +43,8 @@ class CustomerRepository:
             self.db.delete(customer)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(
         self,
@@ -79,19 +79,19 @@ class CustomerRepository:
             self.db.commit()
             self.db.refresh(customer)
             return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_user_id(self, user_id: str) -> object:
         try:
             customer = self.db.query(Customer).filter(Customer.user_id == user_id).first()
             return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_customers_by_phone(self, phone: str) -> list[object]:
         try:
             customers = self.db.query(Customer).filter(Customer.phone == phone).all()
             return customers
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

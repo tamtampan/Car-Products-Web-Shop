@@ -12,8 +12,8 @@ class ShoppingOrderItemService:
             with SessionLocal() as db:
                 shopping_order_item_repository = ShoppingOrderItemRepository(db)
                 return shopping_order_item_repository.create(quantity, product_id, shopping_order_id)
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(shopping_order_item_id: str) -> object:
@@ -24,8 +24,8 @@ class ShoppingOrderItemService:
                 if shopping_order_item is None:
                     raise ShoppingOrderItemNotFoundError()
                 return shopping_order_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -36,8 +36,8 @@ class ShoppingOrderItemService:
                 if len(shopping_orders) == 0:
                     raise ShoppingOrderItemNotFoundError()
                 return shopping_orders
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(shopping_order_item_id: str) -> bool:
@@ -48,8 +48,8 @@ class ShoppingOrderItemService:
                 if shopping_order_item is None:
                     raise ShoppingOrderItemNotFoundError()
                 return shopping_order_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_items_by_shopping_order_id(shopping_order_id: str) -> list[object]:
@@ -60,5 +60,5 @@ class ShoppingOrderItemService:
                 if len(shopping_order_items) == 0:
                     raise ShoppingOrderItemNotFoundError()
                 return shopping_order_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

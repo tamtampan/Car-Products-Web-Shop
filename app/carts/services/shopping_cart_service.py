@@ -18,10 +18,10 @@ class ShoppingCartService:
             with SessionLocal() as db:
                 shopping_cart_repository = ShoppingCartRepository(db)
                 return shopping_cart_repository.create(customer_id)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(shopping_cart_id: str) -> object:
@@ -34,8 +34,8 @@ class ShoppingCartService:
                 if shopping_cart is None:
                     raise ShoppingCartNotFoundError()
                 return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_customer_id(customer_id: str) -> object:
@@ -48,8 +48,8 @@ class ShoppingCartService:
                 if shopping_cart is None:
                     raise ShoppingCartNotFoundError()
                 return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -62,8 +62,8 @@ class ShoppingCartService:
                 if len(shopping_carts) == 0:
                     raise ShoppingCartNotFoundError()
                 return shopping_carts
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(shopping_cart_id: str) -> bool:
@@ -76,10 +76,10 @@ class ShoppingCartService:
                 if shopping_cart is None:
                     raise ShoppingCartNotFoundError()
                 return shopping_cart
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(shopping_cart_id: str, amount: float, subtract: bool = False) -> object:
@@ -94,8 +94,8 @@ class ShoppingCartService:
                 if shopping_cart is False:
                     raise ShoppingCartTotalCostError()
                 return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_set_total_cost(shopping_cart_id: str, total_cost: float) -> object:
@@ -107,5 +107,5 @@ class ShoppingCartService:
                 if shopping_cart is None:
                     raise ShoppingCartNotFoundError()
                 return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

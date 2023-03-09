@@ -22,8 +22,8 @@ class OfficeRepository:
             self.db.commit()
             self.db.refresh(office)
             return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, office_id: str) -> object:
         """Read by id"""
@@ -31,8 +31,8 @@ class OfficeRepository:
         try:
             office = self.db.query(Office).filter(Office.office_id == office_id).first()
             return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         """Read all"""
@@ -40,8 +40,8 @@ class OfficeRepository:
         try:
             offices = self.db.query(Office).all()
             return offices
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, office_id: str) -> bool or None:
         """Delete by id"""
@@ -53,8 +53,8 @@ class OfficeRepository:
             self.db.delete(office)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(
         self,
@@ -91,13 +91,16 @@ class OfficeRepository:
             self.db.commit()
             self.db.refresh(office)
             return office
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_name(self, name: str) -> object:
         """Read by name"""
 
-        office = self.db.query(Office).filter(Office.name.ilike(f"{name}%")).first()
-        if office is None:
-            return None
-        return office
+        try:
+            office = self.db.query(Office).filter(Office.name.ilike(f"{name}%")).first()
+            if office is None:
+                return None
+            return office
+        except Exception as exc:
+            raise exc

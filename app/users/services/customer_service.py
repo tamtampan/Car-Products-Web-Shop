@@ -16,10 +16,10 @@ class CustomerService:
             with SessionLocal() as db:
                 customer_repository = CustomerRepository(db)
                 return customer_repository.create(name, surname, phone, address, city, country, postal_code, user_id)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(customer_id: str) -> object:
@@ -30,8 +30,8 @@ class CustomerService:
                 if customer is None:
                     raise CustomerNotFoundError()
                 return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -42,8 +42,8 @@ class CustomerService:
                 if len(customers) == 0:
                     raise CustomerNotFoundError()
                 return customers
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(customer_id: str) -> bool:
@@ -54,10 +54,10 @@ class CustomerService:
                 if customer is None:
                     raise CustomerNotFoundError()
             return customer
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(
@@ -79,8 +79,8 @@ class CustomerService:
                 if customer is None:
                     raise CustomerNotFoundError()
                 return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_user_id(user_id: str) -> object:
@@ -91,8 +91,8 @@ class CustomerService:
                 if customer is None:
                     raise CustomerNotFoundError()
                 return customer
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_customers_by_phone(phone: str) -> list[object]:
@@ -103,5 +103,5 @@ class CustomerService:
                 if len(customers) == 0:
                     raise CustomerNotFoundError()
                 return customers
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

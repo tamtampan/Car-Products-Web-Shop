@@ -19,16 +19,16 @@ class CartItemRepository:
             self.db.commit()
             self.db.refresh(cart_item)
             return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, cart_item_id: str) -> object:
         """Read by id"""
         try:
             cart_item = self.db.query(CartItem).filter(CartItem.cart_item_id == cart_item_id).first()
             return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_shopping_cart_id(self, shopping_cart_id: str) -> list[object]:
         """Read by shopping cart id"""
@@ -36,8 +36,8 @@ class CartItemRepository:
         try:
             cart_items = self.db.query(CartItem).filter(CartItem.shopping_cart_id == shopping_cart_id).all()
             return cart_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         """Read all"""
@@ -45,8 +45,8 @@ class CartItemRepository:
         try:
             cart_items = self.db.query(CartItem).all()
             return cart_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, cart_item_id: str) -> bool or None:
         """Delete by id"""
@@ -58,8 +58,8 @@ class CartItemRepository:
             self.db.delete(cart_item)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_quantity(self, cart_item_id: str, quantity: int) -> object:
         """Update quantity"""
@@ -73,5 +73,5 @@ class CartItemRepository:
             self.db.commit()
             self.db.refresh(cart_item)
             return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

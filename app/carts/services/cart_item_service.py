@@ -18,8 +18,8 @@ class CartItemService:
             with SessionLocal() as db:
                 cart_item_repository = CartItemRepository(db)
                 return cart_item_repository.create(quantity, shopping_cart_id, product_id)
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(cart_item_id: str) -> object:
@@ -32,8 +32,8 @@ class CartItemService:
                 if cart_item is None:
                     raise CartItemNotFoundError()
                 return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -46,8 +46,8 @@ class CartItemService:
                 if len(cart_items) == 0:
                     raise CartItemNotFoundError()
                 return cart_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_shopping_cart_id(shopping_cart_id: str) -> list[object]:
@@ -60,8 +60,8 @@ class CartItemService:
                 if len(cart_items) == 0:
                     raise CartItemNotFoundError()
                 return cart_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(cart_item_id: str) -> bool:
@@ -74,8 +74,8 @@ class CartItemService:
                 if cart_item is None:
                     raise CartItemNotFoundError()
                 return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_quantity(cart_item_id: str, quantity: int) -> object:
@@ -90,5 +90,5 @@ class CartItemService:
                 if cart_item is None:
                     raise CartItemNotFoundError()
                 return cart_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

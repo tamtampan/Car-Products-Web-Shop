@@ -29,8 +29,8 @@ class ShoppingOrderRepository:
             self.db.commit()
             self.db.refresh(shopping_order)
             return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, shopping_order_id: str) -> object:
         try:
@@ -38,15 +38,15 @@ class ShoppingOrderRepository:
                 self.db.query(ShoppingOrder).filter(ShoppingOrder.shopping_order_id == shopping_order_id).first()
             )
             return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         try:
             shopping_orders = self.db.query(ShoppingOrder).all()
             return shopping_orders
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, shopping_order_id: str) -> bool or None:
         try:
@@ -58,8 +58,8 @@ class ShoppingOrderRepository:
             self.db.delete(shopping_order)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(
         self, shopping_order_id: str, shipping_cost: float = None, status: int = None, shipped_date: str = None
@@ -80,15 +80,15 @@ class ShoppingOrderRepository:
             self.db.commit()
             self.db.refresh(shopping_order)
             return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_today_shopping_orders(self) -> list[object]:
         try:
             shopping_orders = self.db.query(ShoppingOrder).filter(ShoppingOrder.order_date == date.today()).all()
             return shopping_orders
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_total_price(self, shopping_order_id: str, total_price: float) -> object:
         try:
@@ -102,8 +102,8 @@ class ShoppingOrderRepository:
             self.db.commit()
             self.db.refresh(shopping_order)
             return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_total_price_for_amount(self, shopping_order_id: str, amount: float, subtract: bool = False) -> object:
         try:
@@ -121,5 +121,5 @@ class ShoppingOrderRepository:
             self.db.commit()
             self.db.refresh(shopping_order)
             return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

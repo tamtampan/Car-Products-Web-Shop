@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Response
 from sqlalchemy.exc import IntegrityError
+from starlette.responses import JSONResponse
 
 from app.offices.exceptions import OfficeNotFoundError
 from app.offices.services import OfficeService
@@ -41,38 +42,38 @@ class EmployeeController:
             raise HTTPException(status_code=400, detail="You can not be employee if you are not user.")
         except OfficeNotFoundError:
             raise HTTPException(status_code=400, detail="No office with provided id found.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_id(employee_id: str) -> object:
         try:
             employee = EmployeeService.read_by_id(employee_id)
             return employee
-        except EmployeeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except EmployeeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_all() -> list[object]:
         try:
             employee = EmployeeService.read_all()
             return employee
-        except EmployeeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No employees in system.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except EmployeeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No employees in system.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def delete_by_id(employee_id: str) -> Response:
         try:
             EmployeeService.delete_by_id(employee_id)
-            return Response(status_code=200, content=f"Employee with id - {employee_id} deleted.")
-        except EmployeeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            return JSONResponse(status_code=200, content=f"Employee with id - {employee_id} deleted.")
+        except EmployeeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update(
@@ -81,7 +82,7 @@ class EmployeeController:
         try:
             employee = EmployeeService.update(employee_id, name, surname, phone, job_title)
             return employee
-        except EmployeeNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except EmployeeNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
