@@ -20,8 +20,8 @@ class ShoppingCartRepository:
             self.db.commit()
             self.db.refresh(shopping_cart)
             return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, shopping_cart_id: str) -> object:
         """Read by id"""
@@ -31,8 +31,8 @@ class ShoppingCartRepository:
                 self.db.query(ShoppingCart).filter(ShoppingCart.shopping_cart_id == shopping_cart_id).first()
             )
             return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_customer_id(self, customer_id: str) -> object:
         """Read by Customer id"""
@@ -40,8 +40,8 @@ class ShoppingCartRepository:
         try:
             shopping_cart = self.db.query(ShoppingCart).filter(ShoppingCart.customer_id == customer_id).first()
             return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         """Read all"""
@@ -49,8 +49,8 @@ class ShoppingCartRepository:
         try:
             shopping_carts = self.db.query(ShoppingCart).all()
             return shopping_carts
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, shopping_cart_id: str) -> bool or None:
         """Delete by id"""
@@ -64,8 +64,8 @@ class ShoppingCartRepository:
             self.db.delete(shopping_cart)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(self, shopping_cart_id: str, amount: float, subtract: bool = False) -> object:
         """Update"""
@@ -85,8 +85,8 @@ class ShoppingCartRepository:
             self.db.commit()
             self.db.refresh(shopping_cart)
             return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_set_total_cost(self, shopping_cart_id: str, total_cost: float) -> object:
         """Update total cost"""
@@ -102,5 +102,5 @@ class ShoppingCartRepository:
             self.db.commit()
             self.db.refresh(shopping_cart)
             return shopping_cart
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

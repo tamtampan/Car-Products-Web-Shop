@@ -20,8 +20,8 @@ class ProductCategoryRepository:
             self.db.commit()
             self.db.refresh(product_category)
             return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, product_category_id: str) -> object:
         """Read by id"""
@@ -33,8 +33,8 @@ class ProductCategoryRepository:
                 .first()
             )
             return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_name(self, name: str) -> object:
         """Read by name"""
@@ -42,8 +42,8 @@ class ProductCategoryRepository:
         try:
             product_category = self.db.query(ProductCategory).filter(ProductCategory.name == name).first()
             return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         """Read all"""
@@ -51,8 +51,8 @@ class ProductCategoryRepository:
         try:
             product_categories = self.db.query(ProductCategory).all()
             return product_categories
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, product_category_id: str) -> bool or None:
         """Delete by id"""
@@ -68,8 +68,8 @@ class ProductCategoryRepository:
             self.db.delete(product_category)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_name(self, product_category_id: str, new_name: str) -> object:
         """Update name"""
@@ -87,8 +87,8 @@ class ProductCategoryRepository:
             self.db.commit()
             self.db.refresh(product_category)
             return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_category_name_like(self, name: str) -> object:
         """Read category name by initial letters"""
@@ -96,5 +96,5 @@ class ProductCategoryRepository:
         try:
             product_category = self.db.query(ProductCategory).filter(ProductCategory.name.ilike(f"%{name}%")).first()
             return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.products.exceptions import ProducerNotFoundError
 from app.products.services import ProducerService
+from starlette.responses import JSONResponse
 
 
 class ProducerController:
@@ -28,8 +29,8 @@ class ProducerController:
             return producer
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"Producer with provided name - {name} already exists.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_id(producer_id: str) -> object:
@@ -38,10 +39,10 @@ class ProducerController:
         try:
             producer = ProducerService.read_by_id(producer_id)
             return producer
-        except ProducerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProducerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -50,10 +51,10 @@ class ProducerController:
         try:
             producer = ProducerService.read_by_name(name)
             return producer
-        except ProducerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProducerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_all() -> list[object]:
@@ -62,10 +63,10 @@ class ProducerController:
         try:
             producers = ProducerService.read_all()
             return producers
-        except ProducerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No producers in system.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProducerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No producers in system.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def delete_by_id(producer_id: str) -> Response:
@@ -73,13 +74,13 @@ class ProducerController:
 
         try:
             ProducerService.delete_by_id(producer_id)
-            return Response(content=f"Producer with id - {producer_id} is deleted")
-        except ProducerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+            return JSONResponse(content=f"Producer with id - {producer_id} is deleted")
+        except ProducerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(status_code=400, detail="Can not delete producer that has products in system.")
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=str(exc))
 
     @staticmethod
     def update(producer_id: str, name: str = None, address: str = None, description: str = None) -> object:
@@ -90,7 +91,7 @@ class ProducerController:
                 producer_id=producer_id, name=name, address=address, description=description
             )
             return producer
-        except ProducerNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProducerNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))

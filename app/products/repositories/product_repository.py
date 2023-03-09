@@ -1,6 +1,6 @@
 """Product Repository"""
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 
 from app.products.models import Product
 from app.shopping_orders.models import ShoppingOrderItem
@@ -33,8 +33,8 @@ class ProductRepository:
             self.db.commit()
             self.db.refresh(product)
             return product
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, product_id: str) -> object:
         """Read by id"""
@@ -42,8 +42,8 @@ class ProductRepository:
         try:
             product = self.db.query(Product).filter(Product.product_id == product_id).first()
             return product
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         """Read all"""
@@ -51,8 +51,8 @@ class ProductRepository:
         try:
             products = self.db.query(Product).all()
             return products
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, product_id: str) -> bool or None:
         """Delete by id"""
@@ -64,8 +64,8 @@ class ProductRepository:
             self.db.delete(product)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update(
         self,
@@ -96,8 +96,8 @@ class ProductRepository:
             self.db.commit()
             self.db.refresh(product)
             return product
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def update_quantity_in_stock(self, product_id: str, amount: int, subtract: bool = False) -> object:
         """Update quantity in stock"""
@@ -115,8 +115,8 @@ class ProductRepository:
             self.db.commit()
             self.db.refresh(product)
             return product
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_products_for_car_brand(self, car_brand: str) -> list[object]:
         """Read all for car brand"""
@@ -124,8 +124,8 @@ class ProductRepository:
         try:
             products = self.db.query(Product).filter(Product.for_car_brand.ilike(f"{car_brand}%")).all()
             return products
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_products_by_category_id(self, product_category_id: str) -> list[object]:
         """Read by category id"""
@@ -133,8 +133,8 @@ class ProductRepository:
         try:
             products = self.db.query(Product).filter(Product.product_category_id == product_category_id).all()
             return products
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_products_name_like(self, name: str) -> list[object]:
         """Read by name"""
@@ -142,8 +142,8 @@ class ProductRepository:
         try:
             products = self.db.query(Product).filter(Product.name.ilike(f"{name}%")).all()
             return products
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_code(self, code: str) -> object:
         """Read by code"""
@@ -151,21 +151,16 @@ class ProductRepository:
         try:
             product = self.db.query(Product).filter(Product.code == code).first()
             return product
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
-    def read_products_by_descending_number_of_sold(self) -> list[object]:
+    def read_products_by_descending_number_of_sold(self) -> Query:
         try:
-            products = []
             result = (
                 self.db.query(Product, func.count(ShoppingOrderItem.shopping_order_item_id))
                 .join(Product)
                 .group_by(ShoppingOrderItem.product_id)
             )
-            for row in result:
-                product = row[0]
-                product.number_sold = row[1]
-                products.append(product)
-            return products
+            return result
         except Exception as exc:
             raise exc

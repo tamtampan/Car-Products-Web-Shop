@@ -14,10 +14,10 @@ class EmployeeService:
             with SessionLocal() as db:
                 employee_repository = EmployeeRepository(db)
                 return employee_repository.create(name, surname, phone, job_title, user_id, office_id)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(employee_id: str) -> object:
@@ -28,8 +28,8 @@ class EmployeeService:
                 if employee is None:
                     raise EmployeeNotFoundError()
                 return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -40,8 +40,8 @@ class EmployeeService:
                 if len(employees) == 0:
                     raise EmployeeNotFoundError()
                 return employees
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(employee_id: str) -> bool:
@@ -52,8 +52,8 @@ class EmployeeService:
                 if employee is None:
                     raise EmployeeNotFoundError()
                 return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(
@@ -66,5 +66,5 @@ class EmployeeService:
                 if employee is None:
                     raise EmployeeNotFoundError()
                 return employee
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

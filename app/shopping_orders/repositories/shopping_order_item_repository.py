@@ -15,8 +15,8 @@ class ShoppingOrderItemRepository:
             self.db.commit()
             self.db.refresh(shopping_order_item)
             return shopping_order_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_by_id(self, shopping_order_item_id: str) -> object:
         try:
@@ -26,15 +26,15 @@ class ShoppingOrderItemRepository:
                 .first()
             )
             return shopping_order_item
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_all(self) -> list[object]:
         try:
             shopping_order_items = self.db.query(ShoppingOrderItem).all()
             return shopping_order_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def delete_by_id(self, shopping_order_item_id: str) -> bool or None:
         try:
@@ -48,8 +48,8 @@ class ShoppingOrderItemRepository:
             self.db.delete(shopping_order_item)
             self.db.commit()
             return True
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def read_items_by_shopping_order_id(self, shopping_order_id: str) -> list[object]:
         try:
@@ -57,5 +57,5 @@ class ShoppingOrderItemRepository:
                 self.db.query(ShoppingOrderItem).filter(ShoppingOrderItem.shopping_order_id == shopping_order_id).all()
             )
             return shopping_order_items
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

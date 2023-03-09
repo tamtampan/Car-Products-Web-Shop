@@ -49,8 +49,8 @@ class ShoppingOrderService:
                 return shopping_order_repository.create(
                     total_price, shipping_cost, status, order_date, shipped_date, customer_id, office_id
                 )
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(shopping_order_id: str) -> object:
@@ -61,8 +61,8 @@ class ShoppingOrderService:
                 if shopping_order is None:
                     raise ShoppingOrderNotFoundError()
                 return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -73,8 +73,8 @@ class ShoppingOrderService:
                 if len(shopping_orders) == 0:
                     raise ShoppingOrderNotFoundError()
                 return shopping_orders
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(shopping_order_id: str) -> bool:
@@ -85,10 +85,10 @@ class ShoppingOrderService:
                 if shopping_order is None:
                     raise ShoppingOrderNotFoundError()
                 return shopping_order
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update(
@@ -112,10 +112,10 @@ class ShoppingOrderService:
                     shopping_order_id, shipping_cost, status, shipped_date
                 )
                 return shopping_order
-        except ValueError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except ValueError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_today_shopping_orders() -> list[object]:
@@ -126,8 +126,8 @@ class ShoppingOrderService:
                 if len(shopping_orders) == 0:
                     raise ShoppingOrderNotFoundError()
                 return shopping_orders
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_total_price(shopping_order_id: str, total_price: float) -> object:
@@ -138,8 +138,8 @@ class ShoppingOrderService:
                 if shopping_order is None:
                     raise ShoppingOrderNotFoundError()
                 return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def sum_today_profit() -> float:
@@ -151,8 +151,8 @@ class ShoppingOrderService:
                 for order in shopping_orders:
                     profit += order.total_price
                 return profit
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_total_price_for_amount(shopping_order_id: str, amount: float, subtract: bool = False) -> object:
@@ -167,5 +167,5 @@ class ShoppingOrderService:
                 if shopping_order is None:
                     raise ShoppingOrderNotFoundError()
                 return shopping_order
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

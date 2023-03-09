@@ -14,10 +14,10 @@ class ProductCategoryService:
             with SessionLocal() as db:
                 product_category_repository = ProductCategoryRepository(db)
                 return product_category_repository.create(name)
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_id(product_category_id: str) -> object:
@@ -28,8 +28,8 @@ class ProductCategoryService:
                 if product_category is None:
                     raise ProductCategoryNotFoundError()
                 return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_all() -> list[object]:
@@ -40,8 +40,8 @@ class ProductCategoryService:
                 if len(product_categories) == 0:
                     raise ProductCategoryNotFoundError()
                 return product_categories
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def delete_by_id(product_category_id: str) -> bool:
@@ -52,10 +52,10 @@ class ProductCategoryService:
                 if product_category is None:
                     raise ProductCategoryNotFoundError()
                 return product_category
-        except IntegrityError as e:
-            raise e
-        except Exception as e:
-            raise e
+        except IntegrityError as exc:
+            raise exc
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def update_name(product_category_id: str, new_name: str) -> object:
@@ -66,8 +66,8 @@ class ProductCategoryService:
                 if product_category is None:
                     raise ProductCategoryNotFoundError()
                 return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -78,8 +78,8 @@ class ProductCategoryService:
                 if product_category is None:
                     raise ProductCategoryNotFoundError()
                 return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     @staticmethod
     def read_category_name_like(name: str) -> object:
@@ -90,5 +90,5 @@ class ProductCategoryService:
                 if product_category is None:
                     raise ProductCategoryNotFoundError()
                 return product_category
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc

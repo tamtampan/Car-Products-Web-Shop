@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.products.exceptions import *
 from app.products.services import ProductCategoryService
+from starlette.responses import JSONResponse
 
 
 class ProductCategoryController:
@@ -23,8 +24,8 @@ class ProductCategoryController:
             return product_category
         except IntegrityError:
             raise HTTPException(status_code=400, detail=f"Product category with provided name - {name} already exists.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_id(product_category_id: str) -> object:
@@ -34,10 +35,10 @@ class ProductCategoryController:
             product_category = ProductCategoryService.read_by_id(product_category_id)
             if product_category:
                 return product_category
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_by_name(name: str) -> object:
@@ -46,10 +47,10 @@ class ProductCategoryController:
             product_category = ProductCategoryService.read_by_name(name)
             if product_category:
                 return product_category
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_all() -> list[object]:
@@ -58,10 +59,10 @@ class ProductCategoryController:
         try:
             product_categories = ProductCategoryService.read_all()
             return product_categories
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail="No product categories in system.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail="No product categories in system.")
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def delete_by_id(product_category_id: str) -> Response:
@@ -69,13 +70,13 @@ class ProductCategoryController:
 
         try:
             ProductCategoryService.delete_by_id(product_category_id)
-            return Response(content=f"Product category with id - {product_category_id} is deleted")
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
+            return JSONResponse(content=f"Product category with id - {product_category_id} is deleted")
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
         except IntegrityError:
             raise HTTPException(status_code=400, detail="Can not delete product category with existing products.")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def update_name(product_category_id: str, new_name: str) -> object:
@@ -83,10 +84,10 @@ class ProductCategoryController:
         try:
             product_category = ProductCategoryService.update_name(product_category_id, new_name)
             return product_category
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
 
     @staticmethod
     def read_category_name_like(name: str) -> object:
@@ -95,7 +96,7 @@ class ProductCategoryController:
         try:
             product_category = ProductCategoryService.read_category_name_like(name)
             return product_category
-        except ProductCategoryNotFoundError as e:
-            raise HTTPException(status_code=e.code, detail=e.message)
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+        except ProductCategoryNotFoundError as exc:
+            raise HTTPException(status_code=exc.code, detail=exc.message)
+        except Exception as exc:
+            raise HTTPException(status_code=500, detail=str(exc))
